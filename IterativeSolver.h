@@ -11,6 +11,7 @@ private:
     unsigned int maxIter;
     unsigned int iterations;
     UpdateStrategy<T, MatrixType>* const updateStrategy;
+    T tol;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         if ((A * currentResult - b).squaredNorm() / b.squaredNorm() >= tol) {
@@ -21,7 +22,7 @@ private:
 
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy<T, MatrixType>* const updateStrategy) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy) {}
+    IterativeSolver(unsigned int maxIter, UpdateStrategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
     unsigned int neededIterations() const {
         return this->iterations;
     }
@@ -32,7 +33,7 @@ public:
 
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
 
-    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) override {
+    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
         updateStrategy->init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
         unsigned int iter = 0;
