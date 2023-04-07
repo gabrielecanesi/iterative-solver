@@ -3,13 +3,13 @@
 
 #include "IterativeSolver.h"
 
-template<typename T>
-class GradientUpdateStrategy : public UpdateStrategy<T> {
+template<typename T, typename MatrixType>
+class GradientUpdateStrategy : public UpdateStrategy<T, MatrixType> {
     
     public:
-    GradientUpdateStrategy() : UpdateStrategy<T>() {}
+    GradientUpdateStrategy() : UpdateStrategy<T, MatrixType>() {}
 
-    friend class IterativeSolver<T>;
+    friend class IterativeSolver<T, MatrixType>;
     private:
     const Eigen::Matrix<T, Eigen::Dynamic, 1>* const update() override {
         Eigen::Matrix<T, Eigen::Dynamic, 1> residual = computeResidual();

@@ -4,8 +4,8 @@
 #include "Solver.h"
 #include "UpdateStrategy.h"
 
-template<typename T>
-class IterativeSolver : AbstractSolver<T> {
+template<typename T, typename MatrixType>
+class IterativeSolver : AbstractSolver<T, MatrixType> {
     private:
     unsigned int maxIter;
     unsigned int iterations;
@@ -19,14 +19,14 @@ class IterativeSolver : AbstractSolver<T> {
 
 
     public:
-    IterativeSolver(unsigned int maxIter) : AbstractSolver<T>(), maxIter(maxIter) {}
+    IterativeSolver(unsigned int maxIter) : AbstractSolver<T, MatrixType>(), maxIter(maxIter) {}
     unsigned int neededIterations() const {
         return this->iterations;
     }
     virtual ~IterativeSolver() {}
 
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
-    solve(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol, UpdateStrategy<T> &updateStrategy) override {
+    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol, UpdateStrategy<T, MatrixType> &updateStrategy) override {
         updateStrategy.init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
         unsigned int iter = 0;

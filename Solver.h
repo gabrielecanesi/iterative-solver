@@ -6,11 +6,11 @@
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Sparse>
 
-template<typename T>
+template<typename T, typename MatrixType>
 class AbstractSolver {
     public:
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
-    solve(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, const double tol, UpdateStrategy<T> &updateStrategy) = 0;
+    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, const double tol, UpdateStrategy<T, MatrixType> &updateStrategy) = 0;
     virtual ~AbstractSolver() {}
 };
 
