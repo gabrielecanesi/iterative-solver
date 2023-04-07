@@ -27,10 +27,6 @@ public:
         return this->iterations;
     }
 
-    virtual ~IterativeSolver() {
-        delete updateStrategy;
-    }
-
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
