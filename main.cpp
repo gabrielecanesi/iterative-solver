@@ -1,13 +1,15 @@
 #include <iostream>
 #include "IterativeSolver.h"
+#include "Solver.h"
+#include "MatrixReader.h"
 
 #include "ConjugateGradientUpdateStrategy.h"
-#include "Solver.h"
 #include "GradientUpdateStrategy.h"
-
-#include "Solver.h"
+#include "GaussSeidelUpdateStrategy.h"
 #include "JacobiUpdateStrategy.h"
-#include "MatrixReader.h"
+
+
+
 
 typedef double precision;
 
@@ -15,8 +17,8 @@ typedef double precision;
 template<typename T, typename MatrixType>
 Eigen::Matrix<T, Eigen::Dynamic, 1> solve(UpdateStrategy<T, MatrixType> &updateStrategy, MatrixType &A, Eigen::Matrix<precision, Eigen::Dynamic, 1> b,
 Eigen::Matrix<precision, Eigen::Dynamic, 1> &x) {
-    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy);
-    auto foundSolution = solver.solve(A, b, 10e-10);
+    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy,  10e-10);
+    auto foundSolution = solver.solve(A, b);
 
     std::cout << "Stopped after " << solver.neededIterations() << " iterations." << std::endl;
     std::cout << "Relative error: " << (foundSolution - x).squaredNorm() / x.squaredNorm() << std::endl;
@@ -34,9 +36,11 @@ void testMethods() {
     GradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>> gradientUpdateStrategy;
     ConjugateGradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>> conjugateGradientUpdateStrategy;
     JacobiUpdateStrategy<precision, Eigen::SparseMatrix<precision>> jacobiUpdateStrategy;
+    GaussSeidelUpdateStrategy<precision, Eigen::SparseMatrix<precision>> gaussSeidelUpdateStrategy;
     methods.push_back(&gradientUpdateStrategy);
     methods.push_back(&conjugateGradientUpdateStrategy);
     methods.push_back(&jacobiUpdateStrategy);
+    methods.push_back(&gaussSeidelUpdateStrategy);
 
 
     for (UpdateStrategy<precision, Eigen::SparseMatrix<precision>> *strategy : methods) {
