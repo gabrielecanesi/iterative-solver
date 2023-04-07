@@ -10,7 +10,7 @@ class IterativeSolver : AbstractSolver<T, MatrixType> {
     unsigned int maxIter;
     unsigned int iterations;
 
-    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const Eigen::SparseMatrix<T> &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
+    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         if ((A * currentResult - b).squaredNorm() / b.squaredNorm() >= tol) {
             return false;
         }
