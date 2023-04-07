@@ -1,11 +1,27 @@
 #ifndef UPDATE_STRATEGY_H
 #define UPDATE_STRATEGY_H
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Sparse>
+#include "IterativeSolver.h"
 
 template<typename T>
 class UpdateStrategy {
+    protected:
+Eigen::Matrix<T, Eigen::Dynamic, 1> result;
+Eigen::Matrix<T, Eigen::Dynamic, 1> *b;
+Eigen::SparseMatrix<T> *A;
+
+    
     public:
-    virtual void update() = 0;
+    virtual const Eigen::Matrix<T, Eigen::Dynamic, 1>* const update() = 0;
     virtual ~UpdateStrategy(){}
+
+    void init(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+        this->A = &A;
+        this->b = &b;
+        result = Eigen::Matrix<T, Eigen::Dynamic, 1>(this->A->cols(), 1);
+        result.setZero();
+    }
 };
 
 
