@@ -26,7 +26,7 @@ class IterativeSolver : AbstractSolver<T, MatrixType> {
     virtual ~IterativeSolver() {}
 
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
-    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol, UpdateStrategy<T, MatrixType> &updateStrategy) override {
+    solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b, double tol, UpdateStrategy<T, MatrixType> &updateStrategy) override {
         updateStrategy.init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
         unsigned int iter = 0;

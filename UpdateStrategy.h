@@ -16,7 +16,7 @@ MatrixType *A;
     virtual const Eigen::Matrix<T, Eigen::Dynamic, 1>* const update() = 0;
     virtual ~UpdateStrategy(){}
 
-    void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+    virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
         this->A = &A;
         this->b = &b;
         result = Eigen::Matrix<T, Eigen::Dynamic, 1>(this->A->cols(), 1);
