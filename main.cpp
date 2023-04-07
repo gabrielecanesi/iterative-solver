@@ -2,9 +2,11 @@
 #include "IterativeSolver.h"
 
 #include "ConjugateGradientUpdateStrategy.h"
+#include "Solver.h"
 #include "GradientUpdateStrategy.h"
 
 #include "Solver.h"
+#include "JacobiUpdateStrategy.h"
 #include "MatrixReader.h"
 
 typedef float precision;
