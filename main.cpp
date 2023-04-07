@@ -1,7 +1,7 @@
 #include <iostream>
 #include "IterativeSolver.h"
 
-#include "GradientUpdateStrategy.h"
+#include "GaussSeidelUpdateStrategy.h"
 #include "MatrixReader.h"
 
 typedef double precision;
@@ -12,9 +12,9 @@ int main() {
     x.setOnes();
     Eigen::Matrix<precision, Eigen::Dynamic, 1> b = A * x;
 
-    auto strategy = new GradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>>;
-    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(5000, strategy);
-    auto foundSolution = solver.solve(A, b, 10e-10);
+    auto strategy = new GaussSeidelUpdateStrategy<precision, Eigen::SparseMatrix<precision>>;
+    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(5000, strategy, 10e-10);
+    auto foundSolution = solver.solve(A, b);
 
     std::cout << "Stopped after " << solver.neededIterations() << " iterations." << std::endl;
     std::cout << "Gradient-based relative error: " << (foundSolution - x).squaredNorm() / x.squaredNorm() << std::endl;
