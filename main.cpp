@@ -16,8 +16,8 @@ typedef double precision;
 
 template<typename T, typename MatrixType>
 Eigen::Matrix<T, Eigen::Dynamic, 1> solve(UpdateStrategy<T, MatrixType> &updateStrategy, MatrixType &A, Eigen::Matrix<precision, Eigen::Dynamic, 1> b,
-Eigen::Matrix<precision, Eigen::Dynamic, 1> &x) {
-    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy,  10e-10);
+Eigen::Matrix<precision, Eigen::Dynamic, 1> &x, precision tolerance) {
+    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy,  tolerance);
     auto foundSolution = solver.solve(A, b);
 
     std::cout << "Stopped after " << solver.neededIterations() << " iterations." << std::endl;
@@ -26,25 +26,26 @@ Eigen::Matrix<precision, Eigen::Dynamic, 1> &x) {
 }
 
 void testMethods() {
+    std::vector<precision> testTolerances = {10e-4, 10e-6, 10e-8, 10e-10}; 
     std::string filename = "./Matrices/spa2.mtx";
     Eigen::SparseMatrix<precision> A = MatrixReader::readSparseFromFile<precision>(filename);
     Eigen::Matrix<precision, Eigen::Dynamic, 1> x(A.rows(), 1);
     x.setOnes();
     Eigen::Matrix<precision, Eigen::Dynamic, 1> b = A * x;
 
-    std::vector<UpdateStrategy<precision, Eigen::SparseMatrix<precision>>*> methods;
-    GradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>> gradientUpdateStrategy;
-    ConjugateGradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>> conjugateGradientUpdateStrategy;
-    JacobiUpdateStrategy<precision, Eigen::SparseMatrix<precision>> jacobiUpdateStrategy;
-    GaussSeidelUpdateStrategy<precision, Eigen::SparseMatrix<precision>> gaussSeidelUpdateStrategy;
-    methods.push_back(&gradientUpdateStrategy);
-    methods.push_back(&conjugateGradientUpdateStrategy);
-    methods.push_back(&jacobiUpdateStrategy);
-    methods.push_back(&gaussSeidelUpdateStrategy);
+    std::vector<std::shared_ptr<UpdateStrategy<precision, Eigen::SparseMatrix<precision>>>> methods {
+        std::make_shared<GradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>>>(),
+        std::make_shared<ConjugateGradientUpdateStrategy<precision, Eigen::SparseMatrix<precision>>>(),
+        std::make_shared<JacobiUpdateStrategy<precision, Eigen::SparseMatrix<precision>>>(),
+        std::make_shared<GaussSeidelUpdateStrategy<precision, Eigen::SparseMatrix<precision>>>(),
+    };
 
-
-    for (UpdateStrategy<precision, Eigen::SparseMatrix<precision>> *strategy : methods) {
-        solve(*strategy, A, b, x);
+    for (precision tol : testTolerances) {
+        std::cout << "Tolerance: " << tol << std::endl;
+        for (auto &strategyPointer : methods) {
+            solve(*strategyPointer.get(), A, b, x, tol);
+        }
+        std::cout << std::endl;
     }
     std::cout << "Non zero proportion: " << MatrixReader::nonZeroProportion(filename) * 100 << "%" << std::endl;
 }
