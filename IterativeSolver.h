@@ -37,12 +37,11 @@ public:
         do {
             currentResult = updateStrategy->update();
             ++iter;
-        } while (iter <= maxIter && !reachedTolerance(*currentResult, A, b, tol));
+        } while (iter < maxIter && !reachedTolerance(*currentResult, A, b, tol));
 
         this->iterations = iter;
         return *currentResult;
     }
-
 };
 
 #endif
