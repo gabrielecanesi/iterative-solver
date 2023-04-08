@@ -22,6 +22,8 @@ MatrixType *A;
         result = Eigen::Matrix<T, Eigen::Dynamic, 1>(this->A->cols(), 1);
         result.setZero();
     }
+
+    virtual std::string name() const = 0;
 };
 
 

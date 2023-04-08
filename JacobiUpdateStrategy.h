@@ -22,6 +22,10 @@ class JacobiUpdateStrategy : public UpdateStrategy<T, MatrixType> {
 
     }
 
+	virtual std::string name() const override {
+        return "Jacobi";
+    }
+
 };
 
 #endif

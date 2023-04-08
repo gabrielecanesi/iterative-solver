@@ -30,6 +30,9 @@ class GradientUpdateStrategy : public UpdateStrategy<T, MatrixType> {
         return *this->b - (*this->A * this->result);
     }
 
+    virtual std::string name() const override {
+        return "Gradient";
+    }
 };
 
 #endif

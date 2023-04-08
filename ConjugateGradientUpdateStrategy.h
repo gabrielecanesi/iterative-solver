@@ -55,6 +55,10 @@ class ConjugateGradientUpdateStrategy : public UpdateStrategy<T, MatrixType> {
         *residual = computeResidual();
         *d = *residual;
     }
+
+    virtual std::string name() const override {
+        return "Conjugate gradient";
+    }
 };
 
 #endif

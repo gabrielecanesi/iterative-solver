@@ -7,7 +7,7 @@
 #include "GradientUpdateStrategy.h"
 #include "GaussSeidelUpdateStrategy.h"
 #include "JacobiUpdateStrategy.h"
-
+#include "timer.h"
 
 
 
@@ -20,12 +20,14 @@ Eigen::Matrix<precision, Eigen::Dynamic, 1> &x, precision tolerance) {
     IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy,  tolerance);
     auto foundSolution = solver.solve(A, b);
 
-    std::cout << "Stopped after " << solver.neededIterations() << " iterations." << std::endl;
-    std::cout << "Relative error: " << (foundSolution - x).squaredNorm() / x.squaredNorm() << std::endl;
+    std::cout << "---- Method: " << updateStrategy.name() << " ----" << std::endl;
+    std::cout << "\tStopped after " << solver.neededIterations() << " iterations." << std::endl;
+    std::cout << "\tRelative error: " << (foundSolution - x).squaredNorm() / x.squaredNorm() << std::endl;
     return foundSolution;
 }
 
 void testMethods() {
+    Timer timer;
     std::vector<precision> testTolerances = {10e-4, 10e-6, 10e-8, 10e-10}; 
     std::string filename = "./Matrices/spa2.mtx";
     Eigen::SparseMatrix<precision> A = MatrixReader::readSparseFromFile<precision>(filename);
@@ -41,9 +43,13 @@ void testMethods() {
     };
 
     for (precision tol : testTolerances) {
-        std::cout << "Tolerance: " << tol << std::endl;
+        std::cout << "------------- Tolerance: " << tol << " -------------" << std::endl;
         for (auto &strategyPointer : methods) {
+            timer.tic();
             solve(*strategyPointer.get(), A, b, x, tol);
+            timer.toc();
+            std::cout << "\tElapsed: " << timer.elapsedMilliseconds() << "ms" << std::endl;
+            std::cout << std::endl;
         }
         std::cout << std::endl;
     }

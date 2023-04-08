@@ -12,7 +12,7 @@ public:
     GaussSeidelUpdateStrategy(): UpdateStrategy<T, MatrixType>() {};
 
 
-    const Eigen::Matrix<T, Eigen::Dynamic, 1>* const update() {
+    const Eigen::Matrix<T, Eigen::Dynamic, 1>* const update() override {
         BackwardSubstitutionSolver<T, MatrixType> solver;
 
         Eigen::Matrix<T, Eigen::Dynamic, 1> residual = compute_residual();
@@ -25,6 +25,9 @@ public:
         return (*this->A * this->result) - *this->b;
     }
 
+    virtual std::string name() const override {
+        return "Gauss-Seidel";
+    }
 };
 
 #endif //ITERATIVE_SOLVER_GAUSSSEIDELUPDATESTRATEGY_H
