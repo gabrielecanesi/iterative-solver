@@ -8,6 +8,10 @@ class BackwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
 
 public:
     Eigen::Matrix<T, Eigen::Dynamic, 1> solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
+        return solveSpecific(A, b);
+    }
+
+    Eigen::Matrix<T, Eigen::Dynamic, 1> solveSpecific(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
         const int n = b.rows();
         Eigen::Matrix<T, Eigen::Dynamic, 1> currentResult(n, 1);
 
@@ -22,6 +26,36 @@ public:
         }
 
         return currentResult;
+    }
+
+private:
+    Eigen::Matrix<T, Eigen::Dynamic, 1> solveSpecific(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+
+        const int n = b.rows();
+        Eigen::Matrix<T, Eigen::Dynamic, 1> currentResult(n, 1);
+        Eigen::Matrix<T, Eigen::Dynamic, 1> summation(n, 1);
+        summation.fill(0);
+        int currentCol = 0;
+        T currentCoeff = b(0) / A.coeff(0, 0);
+        currentResult(0) =  currentCoeff;
+
+        for (int k = 0; k < A.outerSize(); ++k) {
+            for (typename Eigen::SparseMatrix<T>::InnerIterator it(A, k); it; ++it) {
+
+                if (it.row() > it.col()) //check if the element is under the diagonal
+                    summation(it.row()) += it.value() * currentCoeff;
+
+                if(currentCol != it.col()) {
+                    currentCoeff = (b.coeff(it.col()) - summation(it.col())) / A.coeff(it.col(), it.col());
+                    currentResult(it.col()) = currentCoeff;
+                }
+
+                currentCol = it.col();
+            }
+        }
+
+        return currentResult;
+
     }
 
 };
