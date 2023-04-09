@@ -13,6 +13,8 @@ add_executable(iterative_solver
         MatrixReader.h
         Solver.h
         UpdateStrategy.h
-        BackwardSubstitutionSolver.h)
+        BackwardSubstitutionSolver.h
+        timer.h
+        timer.cpp)
 
 file(COPY ${CMAKE_SOURCE_DIR}/Matrices DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
