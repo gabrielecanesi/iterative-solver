@@ -7,6 +7,7 @@
 #include "IterativeSolver.h"
 #include "UpdateStrategy.h"
 #include "timer.h"
+#include <iostream>
 
 template<typename Precision, typename MatrixType>
 struct BenchmarkResult {
@@ -62,6 +63,14 @@ class IterativeBenchmark {
 
     public:
     IterativeBenchmark() : M_relativeError(0), solver(nullptr) {}
+    IterativeBenchmark(const IterativeBenchmark &other) : solver(nullptr) {
+        if (other.solver != nullptr) {
+            solver = new IterativeSolver<Precision, MatrixType>(*other.solver);
+        }
+        this->timer = other.timer;
+        this->M_relativeError = other.M_relativeError;
+        this->solution = other.solution;
+    }
     ~IterativeBenchmark() {
         delete solver;
     }
@@ -97,11 +106,12 @@ class IterativeBenchmark {
         return M_relativeError;
     }
 
-private:
-    Precision M_relativeError;
-    Eigen::Matrix<Precision, Eigen::Dynamic, 1> solution;
-    IterativeSolver<Precision, MatrixType>* solver;
-    Timer timer;
+    std::string methodName() {
+        if (solver == nullptr) {
+            return "";
+        }
+        return solver->methodName();
+    }
 
 };
 

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include<QPushButton>
+#include <thread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +17,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_buttonLoad_clicked();
+
+    void on_buttonRun_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QPushButton *runButton;
+    QString matrixFile;
+    std::thread *thread;
+
 };
 #endif // MAINWINDOW_H
