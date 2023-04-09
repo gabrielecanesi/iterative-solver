@@ -24,6 +24,7 @@ MatrixType *A;
     }
 
     virtual std::string name() const = 0;
+    virtual UpdateStrategy<T, MatrixType>* clone() = 0;
 };
 
 

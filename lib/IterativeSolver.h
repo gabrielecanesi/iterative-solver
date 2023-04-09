@@ -10,7 +10,7 @@ class IterativeSolver : AbstractSolver<T, MatrixType> {
 private:
     unsigned int maxIter;
     unsigned int iterations;
-    UpdateStrategy<T, MatrixType>* const updateStrategy;
+    UpdateStrategy<T, MatrixType>* updateStrategy;
     T tol;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
@@ -23,6 +23,14 @@ private:
 
 public:
     IterativeSolver(unsigned int maxIter, UpdateStrategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
+    IterativeSolver(const IterativeSolver<T, MatrixType> &other) : updateStrategy(nullptr) {
+        if (other.updateStrategy != nullptr) {
+            this->updateStrategy = other.updateStrategy->clone();
+        }
+        this->maxIter = other.maxIter;
+        this->iterations = other.iterations;
+        this->tol = other.tol;
+    }
     unsigned int neededIterations() const {
         return this->iterations;
     }
@@ -41,6 +49,13 @@ public:
 
         this->iterations = iter;
         return *currentResult;
+    }
+
+    std::string methodName() const {
+        if (updateStrategy == nullptr) {
+            return "";
+        }
+        return updateStrategy->name();
     }
 };
 

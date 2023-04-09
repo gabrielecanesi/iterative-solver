@@ -26,6 +26,15 @@ class JacobiUpdateStrategy : public UpdateStrategy<T, MatrixType> {
         return "Jacobi";
     }
 
+	virtual UpdateStrategy<T, MatrixType>* clone() override {
+        JacobiUpdateStrategy<T, MatrixType>* ret = new JacobiUpdateStrategy<T, MatrixType>();
+        ret->A = this->A;
+        ret->b = this->b;
+        ret->result = this->result;
+        
+        return ret;
+    }
+
 };
 
 #endif

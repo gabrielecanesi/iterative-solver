@@ -28,6 +28,15 @@ public:
     virtual std::string name() const override {
         return "Gauss-Seidel";
     }
+
+    virtual UpdateStrategy<T, MatrixType>* clone() override {
+        GaussSeidelUpdateStrategy<T, MatrixType>* ret = new GaussSeidelUpdateStrategy<T, MatrixType>();
+        ret->A = this->A;
+        ret->b = this->b;
+        ret->result = this->result;
+        
+        return ret;
+    }
 };
 
 #endif //ITERATIVE_SOLVER_GAUSSSEIDELUPDATESTRATEGY_H
