@@ -7,27 +7,14 @@
 #include "GradientUpdateStrategy.h"
 #include "GaussSeidelUpdateStrategy.h"
 #include "JacobiUpdateStrategy.h"
-#include "timer.h"
-
+#include "Benchmark.h"
 
 
 typedef double precision;
 
 
-template<typename T, typename MatrixType>
-Eigen::Matrix<T, Eigen::Dynamic, 1> solve(UpdateStrategy<T, MatrixType> &updateStrategy, MatrixType &A, Eigen::Matrix<precision, Eigen::Dynamic, 1> b,
-Eigen::Matrix<precision, Eigen::Dynamic, 1> &x, precision tolerance) {
-    IterativeSolver<precision, Eigen::SparseMatrix<precision>> solver(20000, &updateStrategy,  tolerance);
-    auto foundSolution = solver.solve(A, b);
-
-    std::cout << "---- Method: " << updateStrategy.name() << " ----" << std::endl;
-    std::cout << "\tStopped after " << solver.neededIterations() << " iterations." << std::endl;
-    std::cout << "\tRelative error: " << (foundSolution - x).squaredNorm() / x.squaredNorm() << std::endl;
-    return foundSolution;
-}
-
 void testMethods() {
-    Timer timer;
+    
     std::vector<precision> testTolerances = {10e-4, 10e-6, 10e-8, 10e-10}; 
     std::string filename = "./Matrices/spa2.mtx";
     Eigen::SparseMatrix<precision> A = MatrixReader::readSparseFromFile<precision>(filename);
@@ -42,14 +29,16 @@ void testMethods() {
         std::make_shared<GaussSeidelUpdateStrategy<precision, Eigen::SparseMatrix<precision>>>(),
     };
 
+    IterativeBenchmark<precision, Eigen::SparseMatrix<precision>> benchmark;
+
     for (precision tol : testTolerances) {
         std::cout << "------------- Tolerance: " << tol << " -------------" << std::endl;
         for (auto &strategyPointer : methods) {
-            timer.tic();
-            solve(*strategyPointer.get(), A, b, x, tol);
-            timer.toc();
-            std::cout << "\tElapsed: " << timer.elapsedMilliseconds() << "ms" << std::endl;
-            std::cout << std::endl;
+            benchmark.run(A, b, 20000, tol, *strategyPointer.get(), x);
+            std::cout << "---- Method: " << strategyPointer.get()->name() << std::endl;
+            std::cout << "\tElapsed: " << benchmark.elapsedMilliseconds() << "ms" << std::endl;
+            std::cout << "\tStopped after " << benchmark.neededIterations() << " iterations." << std::endl;
+            std::cout << "\tRelative error: " << benchmark.relativeError() << std::endl << std::endl;;
         }
         std::cout << std::endl;
     }
