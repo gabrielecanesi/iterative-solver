@@ -8,7 +8,7 @@
 #include "UpdateStrategy.h"
 #include "timer.h"
 
-template<typename Precision>
+template<typename Precision, typename MatrixType>
 struct BenchmarkResult {
 
     BenchmarkResult(): elapsedMillisecondsMean(0), neededIterationsMean(0), relativeErrorMean(0), allValues() {}
@@ -52,6 +52,15 @@ class IterativeBenchmark {
 public:
 
 
+template<typename Precision, typename MatrixType>
+class IterativeBenchmark {
+    private:
+    Precision M_relativeError;
+    Eigen::Matrix<Precision, Eigen::Dynamic, 1> solution;
+    IterativeSolver<Precision, MatrixType>* solver;
+    Timer timer;
+
+    public:
     IterativeBenchmark() : M_relativeError(0), solver(nullptr) {}
     ~IterativeBenchmark() {
         delete solver;
