@@ -8,7 +8,7 @@
 #include "GaussSeidelUpdateStrategy.h"
 #include "JacobiUpdateStrategy.h"
 #include "Benchmark.h"
-
+#include <memory>
 
 typedef double precision;
 
