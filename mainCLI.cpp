@@ -6,7 +6,17 @@ typedef double precision;
 
 
 void testMethods() {
-    std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>("./Matrices/spa1.mtx");
+    std::string filename = "./Matrices/spa2.mtx";
+    std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>(filename);
+    for (auto &method : results) {
+        std::cout << method.methodName() << std::endl;
+        std::cout << "\tTolerance: " << method.tolerance() << std::endl;
+        std::cout << "\tElapsed: " << method.elapsedMilliseconds() << std::endl;
+        std::cout << "\tIterations: " << method.neededIterations() << std::endl; 
+        std::cout << "\tRelative error: " << method.relativeError() << std::endl << std::endl;
+    }
+
+    std::cout << "Matrix non-zero elements: " << MatrixReader::nonZeroProportion(filename) * 100 << "%" << std::endl;
 }
 
 int main() {

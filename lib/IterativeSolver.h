@@ -57,6 +57,10 @@ public:
         }
         return updateStrategy->name();
     }
+
+    T tolerance() const {
+        return tol;
+    }
 };
 
 #endif
