@@ -5,7 +5,7 @@
 #include "IterativeSolver.h"
 #include "UpdateStrategy.h"
 #include "timer.h"
-#include <iostream>
+
 template<typename Precision, typename MatrixType>
 class IterativeBenchmark {
     private:
@@ -32,7 +32,7 @@ class IterativeBenchmark {
             const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x) {
                 solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance);
                 timer.tic();
-                solution = solver->solve(A, b);
+                solution = solver->solve(A, b).eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
                 timer.toc();
                 M_relativeError = (solution - x).squaredNorm() / x.squaredNorm();
     }
@@ -57,6 +57,13 @@ class IterativeBenchmark {
             return "";
         }
         return solver->methodName();
+    }
+
+    Precision tolerance() const {
+        if (solver == nullptr) {
+            return 0;
+        }
+        return solver->tolerance();
     }
 
 };
