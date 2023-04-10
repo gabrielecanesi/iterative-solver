@@ -10,7 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    lib/timer.cpp
 
 HEADERS += \
     mainwindow.h
@@ -22,6 +23,8 @@ TRANSLATIONS += \
     iterative-solver_en_US.ts
 CONFIG += lrelease
 CONFIG += embed_translations
+
+INCLUDEPATH += lib/
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

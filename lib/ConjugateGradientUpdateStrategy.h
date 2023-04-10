@@ -59,6 +59,20 @@ class ConjugateGradientUpdateStrategy : public UpdateStrategy<T, MatrixType> {
     virtual std::string name() const override {
         return "Conjugate gradient";
     }
+
+    virtual UpdateStrategy<T, MatrixType>* clone() override {
+        ConjugateGradientUpdateStrategy<T, MatrixType> *ret = new ConjugateGradientUpdateStrategy<T, MatrixType>();
+        ret->A = this->A;
+        ret->b = this->b;
+        ret->result = this->result;
+        ret->d = new Eigen::Matrix<T, Eigen::Dynamic, 1>();
+        ret->residual = new Eigen::Matrix<T, Eigen::Dynamic, 1>();
+        *ret->d = *d;
+        *ret->residual = *residual;
+        
+        
+        return ret;
+    }
 };
 
 #endif

@@ -33,6 +33,15 @@ class GradientUpdateStrategy : public UpdateStrategy<T, MatrixType> {
     virtual std::string name() const override {
         return "Gradient";
     }
+
+    virtual UpdateStrategy<T, MatrixType>* clone() override {
+        GradientUpdateStrategy<T, MatrixType>* ret = new GradientUpdateStrategy<T, MatrixType>();
+        ret->A = this->A;
+        ret->b = this->b;
+        ret->result = this->result;
+        
+        return ret;
+    }
 };
 
 #endif
