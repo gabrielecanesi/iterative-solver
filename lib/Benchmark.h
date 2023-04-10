@@ -5,6 +5,9 @@
 #include "IterativeSolver.h"
 #include "UpdateStrategy.h"
 #include "timer.h"
+#include <iostream>
+
+
 
 #include <iostream>
 
@@ -90,22 +93,22 @@ class IterativeBenchmark {
         return BenchmarkResult<Precision>(timer.elapsedMilliseconds(), solver->neededIterations(), M_relativeError);
     }
 
-    unsigned int elapsedMilliseconds() {
+    unsigned int elapsedMilliseconds() const {
         return timer.elapsedMilliseconds();
     }
 
-    unsigned int neededIterations() {
+    unsigned int neededIterations() const {
         if (solver != nullptr){
             return solver->neededIterations();
         }
         return 0;
     }
 
-    Precision relativeError() {
+    Precision relativeError() const {
         return M_relativeError;
     }
 
-    std::string methodName() {
+    std::string methodName() const {
         if (solver == nullptr) {
             return "";
         }
@@ -119,6 +122,24 @@ class IterativeBenchmark {
         return solver->tolerance();
     }
 
+    std::string toCSVString() const {
+        std::stringstream stream;
+        stream << this->methodName();
+        stream << "," << this->elapsedMilliseconds();
+        stream << "," << this->neededIterations();
+        stream << "," << this->relativeError();
+        return stream.str();
+    }
+
+    static std::string CsvHeader() {
+        return "method,elapsed_ms,iterations,relative_error";
+    }
 };
+
+template<typename Precision, typename MatrixType>
+std::ostream &operator<<(std::ostream& stream, const IterativeBenchmark<Precision, MatrixType> benchmark) {
+        stream << benchmark.toCSVString();
+        return stream;
+}
 
 #endif
