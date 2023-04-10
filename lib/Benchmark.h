@@ -119,13 +119,14 @@ class IterativeBenchmark {
         std::stringstream stream;
         stream << this->methodName();
         stream << "," << this->elapsedMilliseconds();
+        stream << "," << this->tolerance();
         stream << "," << this->neededIterations();
         stream << "," << this->relativeError();
         return stream.str();
     }
 
     static std::string CsvHeader() {
-        return "method,elapsed_ms,iterations,relative_error";
+        return "method,tolerance,elapsed_ms,iterations,relative_error";
     }
 };
 

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "benchmarkresults.h"
 
 #include "runner.h"
 #include <QFileDialog>
@@ -24,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
         loadingLabel->setMovie(loadingImage);
     }
 
+    resultsDialog = new BenchmarkResults();
+    resultsDialog->setWindowTitle("Benchmark results");
+
     connect(this, SIGNAL(signal_finish()), this, SLOT(on_finishExecution()));
 }
 
@@ -33,6 +37,7 @@ MainWindow::~MainWindow()
     delete loadingLabel;
     delete loadingImage;
     delete loadButton;
+    delete resultsDialog;
 }
 
 
@@ -45,8 +50,9 @@ void MainWindow::on_finishExecution() {
     loadingImage->stop();
     loadingLabel->hide();
     loadingLabel->setText("");
-    this->runButton->setEnabled(true);
-    this->loadButton->setEnabled(true);
+    runButton->setEnabled(true);
+    loadButton->setEnabled(true);
+    resultsDialog->show();
 }
 
 void MainWindow::on_buttonRun_clicked(){
@@ -62,12 +68,7 @@ void MainWindow::on_buttonRun_clicked(){
         this->loadButton->setEnabled(false);
         thread = new std::thread([&](){
             std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>(matrixFile.toStdString());
-            for (auto &benchmark : results) {
-                std::cout << benchmark.methodName() << std::endl;
-                std::cout << benchmark.relativeError() << std::endl;
-                std::cout << benchmark.elapsedMilliseconds() << std::endl;
-                std::cout << benchmark.neededIterations() << std::endl << std::endl;
-            }
+            resultsDialog->buildTable(results);
             emit signal_finish();
         });
     }
