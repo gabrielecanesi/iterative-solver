@@ -39,10 +39,12 @@ private:
         T currentCoeff = b(0) / A.coeff(0, 0);
         currentResult(0) =  currentCoeff;
 
-        for (int k = 0; k < A.outerSize(); ++k) {
-            for (typename Eigen::SparseMatrix<T>::InnerIterator it(A, k); it; ++it) {
+        Eigen::SparseMatrix<T> lowerDiagonal = A.template triangularView<Eigen::Lower>();
 
-                if (it.row() > it.col()) //check if the element is under the diagonal
+        for (int k = 0; k < lowerDiagonal.outerSize(); ++k) {
+            for (typename Eigen::SparseMatrix<T>::InnerIterator it(lowerDiagonal, k); it; ++it) {
+
+                if (it.row() != it.col()) //check if the element is not on the diagonal
                     summation(it.row()) += it.value() * currentCoeff;
 
                 if(currentCol != it.col()) {
