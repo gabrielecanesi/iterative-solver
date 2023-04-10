@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QPushButton>
+#include <QPushButton>
 #include <thread>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +26,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QPushButton *runButton;
+    QLabel *loadingLabel;
+    QMovie *loadingImage;
     QString matrixFile;
     std::thread *thread;
 
