@@ -23,9 +23,15 @@ private slots:
 
     void on_buttonRun_clicked();
 
+    void on_finishExecution();
+
+signals:
+    void signal_finish();
+
 private:
     Ui::MainWindow *ui;
     QPushButton *runButton;
+    QPushButton *loadButton;
     QLabel *loadingLabel;
     QMovie *loadingImage;
     QString matrixFile;
