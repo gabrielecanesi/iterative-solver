@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "runner.h"
+#include <util.h>
 
 typedef double precision;
 
@@ -17,6 +18,7 @@ void testMethods() {
     }
 
     std::cout << "Matrix non-zero elements: " << MatrixReader::nonZeroProportion(filename) * 100 << "%" << std::endl;
+    Util::writeToCsv(results, "results.csv");
 }
 
 int main() {
