@@ -7,8 +7,6 @@
 #include "timer.h"
 #include <iostream>
 
-
-
 #include <iostream>
 
 template<typename Precision, typename MatrixType>
