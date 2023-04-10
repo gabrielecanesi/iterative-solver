@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-template<typename Precision, typename MatrixType>
+template<typename Precision>
 struct BenchmarkResult {
 
     BenchmarkResult(): elapsedMillisecondsMean(0), neededIterationsMean(0), relativeErrorMean(0), allValues() {}
@@ -46,11 +46,6 @@ public:
     Precision relativeErrorMean;
 
 };
-
-template<typename Precision, typename MatrixType>
-class IterativeBenchmark {
-
-public:
 
 
 template<typename Precision, typename MatrixType>
