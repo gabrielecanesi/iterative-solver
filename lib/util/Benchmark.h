@@ -122,8 +122,8 @@ class IterativeBenchmark {
     std::string toCSVString() const {
         std::stringstream stream;
         stream << this->methodName();
-        stream << "," << this->elapsedMilliseconds();
         stream << "," << this->tolerance();
+        stream << "," << this->elapsedMilliseconds();
         stream << "," << this->neededIterations();
         stream << "," << this->relativeError();
         return stream.str();
