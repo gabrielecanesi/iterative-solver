@@ -19,21 +19,3 @@ BenchmarkResults::~BenchmarkResults()
 {
     delete ui;
 }
-
-QString formatToScientific(double value) {
-    std::ostringstream stream;
-    stream << value;
-    return QString::fromStdString(stream.str());
-}
-
-void BenchmarkResults::buildTable(const std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> &benchmarks) {
-    table->clearContents();
-    for (auto &benchmark : benchmarks) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem(QString::fromStdString(benchmark.methodName()), 1));
-        table->setItem(table->rowCount() - 1, 1, new QTableWidgetItem(formatToScientific(benchmark.tolerance())));
-        table->setItem(table->rowCount() - 1, 2, new QTableWidgetItem(formatToScientific(benchmark.elapsedMilliseconds())));
-        table->setItem(table->rowCount() - 1, 3, new QTableWidgetItem(formatToScientific(benchmark.neededIterations())));
-        table->setItem(table->rowCount() - 1, 4, new QTableWidgetItem(formatToScientific(benchmark.relativeError())));
-    }
-}

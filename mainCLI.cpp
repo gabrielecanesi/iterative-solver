@@ -7,7 +7,7 @@ typedef double precision;
 
 
 void testMethods() {
-    std::string filename = "./Matrices/spa2.mtx";
+    std::string filename = "./Matrices/spa1.mtx";
     std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>(filename);
     for (auto &method : results) {
         std::cout << method.methodName() << std::endl;
