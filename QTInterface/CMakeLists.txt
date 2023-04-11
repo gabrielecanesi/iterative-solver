@@ -16,7 +16,18 @@ find_package (Eigen3 REQUIRED NO_MODULE)
 include_directories(../lib)
 add_subdirectory(../lib ../build-lib)
 
+include(FetchContent)
+FetchContent_Declare(eigen
+ GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+ GIT_TAG        3.4.0
+)
 
+FetchContent_GetProperties(Eigen)
+if(NOT eigen_POPULATED)
+  FetchContent_Populate(Eigen)
+endif()
+
+include_directories(${eigen_SOURCE_DIR})
 
 set(PROJECT_SOURCES
         main.cpp
