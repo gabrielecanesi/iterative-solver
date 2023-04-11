@@ -2,9 +2,9 @@
 #define BENCHMARK_H
 
 #include <Eigen/Dense>
-#include "IterativeSolver.h"
-#include "UpdateStrategy.h"
-#include "timer.h"
+#include "solver/IterativeSolver.h"
+#include "updateStrategy/Strategy.h"
+#include "util/timer.h"
 #include <iostream>
 
 #include <iostream>
@@ -75,7 +75,7 @@ class IterativeBenchmark {
     }
 
     BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
-                                   Precision tolerance, UpdateStrategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x) {
+                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x) {
 
         solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance);
         timer.tic();

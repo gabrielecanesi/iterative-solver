@@ -4,8 +4,8 @@
 
 #include "../runner.h"
 #include <QFileDialog>
-#include <MatrixReader.h>
-#include <IterativeSolver.h>
+#include <util/MatrixReader.h>
+#include <solver/IterativeSolver.h>
 #include <Eigen/Sparse>
 #include <thread>
 #include <QMovie>

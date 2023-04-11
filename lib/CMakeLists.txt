@@ -10,5 +10,5 @@ project(iterative_solver)
 
 find_package (Eigen3 REQUIRED NO_MODULE)
 
-add_library(iterative_solver STATIC timer.cpp)
+add_library(iterative_solver STATIC util/timer.cpp)
 target_link_libraries (iterative_solver Eigen3::Eigen)

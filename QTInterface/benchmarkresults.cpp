@@ -2,7 +2,7 @@
 #include "ui_benchmarkresults.h"
 
 #include <Eigen/Sparse>
-#include <Benchmark.h>
+#include <util/Benchmark.h>
 #include <string>
 
 BenchmarkResults::BenchmarkResults(QWidget *parent) :

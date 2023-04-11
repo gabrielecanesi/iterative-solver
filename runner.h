@@ -4,17 +4,18 @@
 
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
-#include <IterativeSolver.h>
-#include <Solver.h>
-#include <MatrixReader.h>
+#include <solver/IterativeSolver.h>
+#include <solver/Solver.h>
+#include <util/MatrixReader.h>
 
-#include <ConjugateGradientUpdateStrategy.h>
-#include <GradientUpdateStrategy.h>
-#include <GaussSeidelUpdateStrategy.h>
-#include <JacobiUpdateStrategy.h>
-#include <Benchmark.h>
+#include <updateStrategy/ConjugateGradientUpdateStrategy.h>
+#include <updateStrategy/GradientUpdateStrategy.h>
+#include <updateStrategy/GaussSeidelUpdateStrategy.h>
+#include <updateStrategy/JacobiUpdateStrategy.h>
+#include <util/Benchmark.h>
 #include <memory>
 
+using namespace UpdateStrategy;
 
 template<typename Precision>
 std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testMethods(const std::string &filename) {
@@ -26,7 +27,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
     x.setOnes();
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> b = A * x;
 
-    std::vector<std::shared_ptr<UpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>> methods {
+    std::vector<std::shared_ptr<Strategy<Precision, Eigen::SparseMatrix<Precision>>>> methods {
         std::make_shared<GradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
         std::make_shared<ConjugateGradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
         std::make_shared<JacobiUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
