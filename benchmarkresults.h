@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QTableWidget>
-#include <Benchmark.h>
+#include <util/Benchmark.h>
 #include "uiutils.h"
 
 namespace Ui {

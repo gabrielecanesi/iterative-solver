@@ -1,7 +1,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include "UpdateStrategy.h"
+#include "updateStrategy/Strategy.h"
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>

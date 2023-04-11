@@ -2,7 +2,7 @@
 #define ITERATIVE_SOLVER_H
 
 #include "Solver.h"
-#include "UpdateStrategy.h"
+#include "updateStrategy/Strategy.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -10,7 +10,7 @@ class IterativeSolver : AbstractSolver<T, MatrixType> {
 private:
     unsigned int maxIter;
     unsigned int iterations;
-    UpdateStrategy<T, MatrixType>* updateStrategy;
+    UpdateStrategy::Strategy<T, MatrixType>* updateStrategy;
     T tol;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
@@ -22,7 +22,7 @@ private:
 
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
+    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
     IterativeSolver(const IterativeSolver<T, MatrixType> &other) : updateStrategy(nullptr) {
         if (other.updateStrategy != nullptr) {
             this->updateStrategy = other.updateStrategy->clone();
