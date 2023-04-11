@@ -24,6 +24,10 @@ struct BenchmarkResult {
 
 private:
     void update_values() {
+        elapsedMillisecondsMean = 0;
+        neededIterationsMean = 0;
+        relativeErrorMean = 0;
+        ElapsedMillisecondsVariance = 0;
         for (auto &value : allValues) {
             elapsedMillisecondsMean += value.elapsedMillisecondsMean;
             neededIterationsMean += value.neededIterationsMean;
