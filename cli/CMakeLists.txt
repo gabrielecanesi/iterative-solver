@@ -11,7 +11,7 @@ project(iterative-client)
 find_package (Eigen3 REQUIRED NO_MODULE)
 
 add_executable(iterative-client mainCLI.cpp)
-add_subdirectory(lib)
-include_directories(lib)
+add_subdirectory(../lib ../lib)
+include_directories(../lib)
 
 target_link_libraries (iterative-client PRIVATE Eigen3::Eigen iterative_solver)

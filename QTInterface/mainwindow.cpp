@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "benchmarkresults.h"
 
-#include "runner.h"
+#include "../runner.h"
 #include <QFileDialog>
 #include <MatrixReader.h>
 #include <IterativeSolver.h>

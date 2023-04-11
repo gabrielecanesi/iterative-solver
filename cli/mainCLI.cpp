@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <Eigen/Sparse>
-#include "runner.h"
+#include "../runner.h"
 #include <util.h>
 
 typedef float precision;
