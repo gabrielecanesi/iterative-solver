@@ -1,5 +1,9 @@
 #ifndef MATRIX_RUNNER_H
 #define MATRIX_RUNNER_H
+
+
+#include <eigen3/Eigen/Sparse>
+#include <eigen3/Eigen/Dense>
 #include <IterativeSolver.h>
 #include <Solver.h>
 #include <MatrixReader.h>
@@ -11,7 +15,7 @@
 #include <Benchmark.h>
 #include <memory>
 
-#include <iostream>
+
 template<typename Precision>
 std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testMethods(const std::string &filename) {
 

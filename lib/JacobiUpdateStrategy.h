@@ -15,7 +15,7 @@ class JacobiUpdateStrategy : public UpdateStrategy<T, MatrixType> {
 
 	    Eigen::DiagonalMatrix<T, Eigen::Dynamic> p(this->A->diagonal());
 
-	    Eigen::VectorXd r = *this->b - (*this->A * this->result);
+	    Eigen::Matrix<T, Eigen::Dynamic, 1> r = *this->b - (*this->A * this->result);
 
 	    this->result += p.inverse() * r;
 	    return &this->result;

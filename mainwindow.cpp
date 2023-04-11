@@ -10,6 +10,8 @@
 #include <thread>
 #include <QMovie>
 
+typedef double precision;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -67,8 +69,8 @@ void MainWindow::on_buttonRun_clicked(){
         this->runButton->setEnabled(false);
         this->loadButton->setEnabled(false);
         thread = new std::thread([&](){
-            std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>(matrixFile.toStdString());
-            resultsDialog->buildTable(results);
+            std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(matrixFile.toStdString());
+            resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
             emit signal_finish();
         });
     }

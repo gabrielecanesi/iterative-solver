@@ -3,12 +3,12 @@
 #include "runner.h"
 #include <util.h>
 
-typedef double precision;
+typedef float precision;
 
 
 void testMethods() {
     std::string filename = "./Matrices/spa1.mtx";
-    std::vector<IterativeBenchmark<double, Eigen::SparseMatrix<double>>> results = testMethods<double>(filename);
+    std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(filename);
     for (auto &method : results) {
         std::cout << method.methodName() << std::endl;
         std::cout << "\tTolerance: " << method.tolerance() << std::endl;
