@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <Eigen/Sparse>
 #include "runner.h"
 #include <util.h>
 
@@ -7,7 +8,7 @@ typedef float precision;
 
 
 void testMethods() {
-    std::string filename = "./Matrices/spa1.mtx";
+    std::string filename = "../Matrices/spa1.mtx";
     std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(filename);
     for (auto &method : results) {
         std::cout << method.methodName() << std::endl;

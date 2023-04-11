@@ -1,7 +1,7 @@
 #include "benchmarkresults.h"
 #include "ui_benchmarkresults.h"
 
-#include <eigen3/Eigen/Sparse>
+#include <Eigen/Sparse>
 #include <Benchmark.h>
 #include <string>
 

@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include <MatrixReader.h>
 #include <IterativeSolver.h>
-#include <eigen3/Eigen/Sparse>
+#include <Eigen/Sparse>
 #include <thread>
 #include <QMovie>
 

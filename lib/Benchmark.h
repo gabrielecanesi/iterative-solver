@@ -1,7 +1,7 @@
 #ifndef BENCHMARK_H
 #define BENCHMARK_H
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include "IterativeSolver.h"
 #include "UpdateStrategy.h"
 #include "timer.h"

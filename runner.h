@@ -2,8 +2,8 @@
 #define MATRIX_RUNNER_H
 
 
-#include <eigen3/Eigen/Sparse>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Sparse>
+#include <Eigen/Dense>
 #include <IterativeSolver.h>
 #include <Solver.h>
 #include <MatrixReader.h>

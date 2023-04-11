@@ -2,7 +2,7 @@
 #define SPARSE_READER_H
 
 #include <fstream>
-#include <eigen3/Eigen/Sparse>
+#include <Eigen/Sparse>
 
 namespace MatrixReader {
 

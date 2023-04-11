@@ -1,7 +1,7 @@
 #ifndef UPDATE_STRATEGY_H
 #define UPDATE_STRATEGY_H
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/Sparse>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include "IterativeSolver.h"
 
 template<typename T, typename MatrixType>
