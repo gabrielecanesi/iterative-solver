@@ -51,14 +51,10 @@ public:
 
 template<typename Precision, typename MatrixType>
 class IterativeBenchmark {
-    private:
-    Precision M_relativeError;
-    Eigen::Matrix<Precision, Eigen::Dynamic, 1> solution;
-    IterativeSolver<Precision, MatrixType>* solver;
-    Timer timer;
 
-    public:
-    IterativeBenchmark() : M_relativeError(0), solver(nullptr) {}
+
+public:
+    IterativeBenchmark() : M_relativeError(0), solver(nullptr), matrixName() {}
     IterativeBenchmark(const IterativeBenchmark &other) : solver(nullptr) {
         if (other.solver != nullptr) {
             solver = new IterativeSolver<Precision, MatrixType>(*other.solver);
@@ -66,7 +62,9 @@ class IterativeBenchmark {
         this->timer = other.timer;
         this->M_relativeError = other.M_relativeError;
         this->solution = other.solution;
+        this->matrixName = other.matrixName;
     }
+    IterativeBenchmark(std::string matrixName): matrixName(matrixName), M_relativeError(0), solver(nullptr) {}
     ~IterativeBenchmark() {
         delete solver;
     }
@@ -116,6 +114,7 @@ class IterativeBenchmark {
         return solver->tolerance();
     }
 
+
     std::string toCSVString() const {
         std::stringstream stream;
         stream << this->methodName();
@@ -123,12 +122,22 @@ class IterativeBenchmark {
         stream << "," << this->elapsedMilliseconds();
         stream << "," << this->neededIterations();
         stream << "," << this->relativeError();
+        stream << "," << this->matrixName;
         return stream.str();
     }
 
     static std::string CsvHeader() {
-        return "method,tolerance,elapsed_ms,iterations,relative_error";
+        return "method,tolerance,elapsed_ms,iterations,relative_error,matrix_name";
     }
+
+public:
+    std::string matrixName;
+
+private:
+    Precision M_relativeError;
+    Eigen::Matrix<Precision, Eigen::Dynamic, 1> solution;
+    IterativeSolver<Precision, MatrixType>* solver;
+    Timer timer;
 };
 
 template<typename Precision, typename MatrixType>
