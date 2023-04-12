@@ -4,7 +4,7 @@
 #include "Solver.h"
 #include "updateStrategy/Strategy.h"
 #include <Eigen/Cholesky>
-#include "exceptions/NonSimmetricAndPositiveDefiniteException.h"
+#include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -22,14 +22,14 @@ private:
         return true;
     }
 
-    void checkSimmetricAndPositiveDefinite(const Eigen::SparseMatrix<T> &A) {
+    void checkSymmetricAndPositiveDefinite(const Eigen::SparseMatrix<T> &A) {
         Eigen::SimplicialLLT<Eigen::SparseMatrix<T>> llt(A);
         if (llt.info() == Eigen::NumericalIssue) {
             throw NonSymmetricAndPositiveDefiniteException();
         }
     }
 
-    void checkSimmetricAndPositiveDefinite(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
+    void checkSymmetricAndPositiveDefinite(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
         Eigen::LLT<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>> llt(A);
         if (llt.info() == Eigen::NumericalIssue) {
             throw NonSymmetricAndPositiveDefiniteException();
@@ -54,7 +54,7 @@ public:
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
         try {
-            checkSimmetricAndPositiveDefinite(A);
+            checkSymmetricAndPositiveDefinite(A);
         } catch (...) {
             throw;
         }
