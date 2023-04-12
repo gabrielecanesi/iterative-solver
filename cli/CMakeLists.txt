@@ -22,7 +22,7 @@ endif()
 
 
 add_executable(iterative-client mainCLI.cpp)
-add_subdirectory(../lib ../lib)
+add_subdirectory(../lib ../build-lib)
 include_directories(../lib ${eigen_SOURCE_DIR})
 
 
