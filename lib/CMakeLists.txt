@@ -8,7 +8,18 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 project(iterative_solver)
 
-find_package (Eigen3 REQUIRED NO_MODULE)
+include(FetchContent)
+FetchContent_Declare(eigen                   
+ GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+ GIT_TAG        3.4.0
+)
 
+FetchContent_GetProperties(Eigen)
+
+if(NOT eigen_POPULATED)
+  FetchContent_Populate(Eigen)
+endif()
+
+include_directories(${eigen_SOURCE_DIR})
 add_library(iterative_solver STATIC util/timer.cpp)
-target_link_libraries (iterative_solver Eigen3::Eigen)
+target_link_libraries(iterative_solver)
