@@ -14,6 +14,7 @@ private:
     unsigned int iterations;
     UpdateStrategy::Strategy<T, MatrixType>* updateStrategy;
     T tol;
+    bool skipMatrixCheck = false;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         if ((A * currentResult - b).squaredNorm() / b.squaredNorm() >= tol) {
@@ -37,7 +38,7 @@ private:
     }
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
+    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol), skipMatrixCheck(skipMatrixCheck) {}
     IterativeSolver(const IterativeSolver<T, MatrixType> &other) : updateStrategy(nullptr) {
         if (other.updateStrategy != nullptr) {
             this->updateStrategy = other.updateStrategy->clone();
@@ -45,6 +46,7 @@ public:
         this->maxIter = other.maxIter;
         this->iterations = other.iterations;
         this->tol = other.tol;
+        this->skipMatrixCheck = other.skipMatrixCheck;
     }
     unsigned int neededIterations() const {
         return this->iterations;
@@ -53,12 +55,14 @@ public:
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
-        try {
-            checkSymmetricAndPositiveDefinite(A);
-        } catch (...) {
-            throw;
+        if(!skipMatrixCheck) {
+            try {
+                checkSymmetricAndPositiveDefinite(A);
+            } catch (...) {
+                throw;
+            }
         }
-        
+
         updateStrategy->init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
         unsigned int iter = 0;
