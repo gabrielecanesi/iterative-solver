@@ -3,6 +3,8 @@
 
 #include "Solver.h"
 #include "updateStrategy/Strategy.h"
+#include <Eigen/Cholesky>
+#include "exceptions/NonSimmetricAndPositiveDefiniteException.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -20,6 +22,19 @@ private:
         return true;
     }
 
+    void checkSimmetricAndPositiveDefinite(const Eigen::SparseMatrix<T> &A) {
+        Eigen::SimplicialLLT<Eigen::SparseMatrix<T>> llt(A);
+        if (llt.info() == Eigen::NumericalIssue) {
+            throw NonSymmetricAndPositiveDefiniteException();
+        }
+    }
+
+    void checkSimmetricAndPositiveDefinite(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
+        Eigen::LLT<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>> llt(A);
+        if (llt.info() == Eigen::NumericalIssue) {
+            throw NonSymmetricAndPositiveDefiniteException();
+        }
+    }
 
 public:
     IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol) {}
@@ -38,6 +53,12 @@ public:
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
+        try {
+            checkSimmetricAndPositiveDefinite(A);
+        } catch (...) {
+            throw;
+        }
+        
         updateStrategy->init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
         unsigned int iter = 0;
