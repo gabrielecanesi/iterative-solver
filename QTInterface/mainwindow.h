@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <thread>
 #include <QLabel>
-#include "errordialog.h"
+#include <QMessageBox>
 
 #include "benchmarkresults.h"
 
@@ -44,7 +44,7 @@ private:
     QMovie *loadingImage;
     QString matrixFile;
     BenchmarkResults *resultsDialog;
-    ErrorDialog *errorDialog;
+    QMessageBox *errorDialog;
     bool checkMatrix;
     std::thread *thread;
 

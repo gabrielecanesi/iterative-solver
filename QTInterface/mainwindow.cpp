@@ -11,14 +11,14 @@
 #include <thread>
 #include <QMovie>
 
-#include <iostream>
+#include <QMessageBox>
 
 typedef double precision;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-    errorDialog(new ErrorDialog()),
+    errorDialog(new QMessageBox()),
     thread(nullptr),
     checkMatrix(false)
 {
@@ -70,8 +70,8 @@ void MainWindow::on_finishExecution() {
 
 void MainWindow::on_error(const std::string &error) {
     stopAnimation();
-    this->errorDialog->setMessage(error);
-    this->errorDialog->show();
+    errorDialog->critical(this, "Error!!!!!", error.c_str());
+    errorDialog->setFixedSize(500, 200);
 }
 
 void MainWindow::on_buttonRun_clicked(){
@@ -93,8 +93,6 @@ void MainWindow::on_buttonRun_clicked(){
             } catch (const NonSymmetricAndPositiveDefiniteException &e) {
                 emit signal_error("Error! the provided matrix is not positive definite and symmetric.");
             }
-
-
         });
     }
 }
