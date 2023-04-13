@@ -6,16 +6,21 @@
 #include <QFileDialog>
 #include <util/MatrixReader.h>
 #include <solver/IterativeSolver.h>
+#include <exceptions/NonSymmetricAndPositiveDefiniteException.h>
 #include <Eigen/Sparse>
 #include <thread>
 #include <QMovie>
+
+#include <iostream>
 
 typedef double precision;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-    thread(nullptr)
+    errorDialog(new ErrorDialog()),
+    thread(nullptr),
+    checkMatrix(false)
 {
     ui->setupUi(this);
     runButton = findChild<QPushButton*>("buttonRun");
@@ -31,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     resultsDialog->setWindowTitle("Benchmark results");
 
     connect(this, SIGNAL(signal_finish()), this, SLOT(on_finishExecution()));
+    connect(this, SIGNAL(signal_error(const std::string&)), this, SLOT(on_error(const std::string&)));
 }
 
 MainWindow::~MainWindow()
@@ -40,6 +46,7 @@ MainWindow::~MainWindow()
     delete loadingImage;
     delete loadButton;
     delete resultsDialog;
+    delete errorDialog;
 }
 
 
@@ -48,13 +55,23 @@ void MainWindow::on_buttonLoad_clicked() {
     this->runButton->setEnabled(true);
 }
 
-void MainWindow::on_finishExecution() {
+void MainWindow::stopAnimation() {
     loadingImage->stop();
     loadingLabel->hide();
     loadingLabel->setText("");
     runButton->setEnabled(true);
     loadButton->setEnabled(true);
+}
+
+void MainWindow::on_finishExecution() {
+    stopAnimation();
     resultsDialog->show();
+}
+
+void MainWindow::on_error(const std::string &error) {
+    stopAnimation();
+    this->errorDialog->setMessage(error);
+    this->errorDialog->show();
 }
 
 void MainWindow::on_buttonRun_clicked(){
@@ -69,10 +86,22 @@ void MainWindow::on_buttonRun_clicked(){
         this->runButton->setEnabled(false);
         this->loadButton->setEnabled(false);
         thread = new std::thread([&](){
-            std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(matrixFile.toStdString());
-            resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
-            emit signal_finish();
+            try {
+                std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(matrixFile.toStdString(), checkMatrix);
+                resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
+                emit signal_finish();
+            } catch (const NonSymmetricAndPositiveDefiniteException &e) {
+                emit signal_error("Error! the provided matrix is not positive definite and symmetric.");
+            }
+
+
         });
     }
+}
+
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+    checkMatrix = arg1 != 0;
 }
 

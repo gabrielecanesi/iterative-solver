@@ -39,6 +39,9 @@ set(PROJECT_SOURCES
         resources.qrc
         uiutils.cpp
         uiutils.h
+        errordialog.cpp
+        errordialog.h
+        errordialog.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

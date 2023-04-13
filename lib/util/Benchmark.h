@@ -72,7 +72,15 @@ public:
     BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x) {
 
-        solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, true);
+        return run(A, b, maxIter, tolerance, strategy, x, false);
+    }
+
+    BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
+                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy,
+                                   const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
+                                   bool skipMatrixCheck) {
+
+        solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck);
         timer.tic();
         solution = solver->solve(A, b).eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
         timer.toc();

@@ -16,6 +16,7 @@ struct MatrixFile {
 
 void testMethods() {
     std::vector<MatrixFile> matrices = {
+            MatrixFile("../Matrices/spa1NonSymmAndPD.mtx", "spa1NonSymmAndPD"),
             MatrixFile("../Matrices/spa1.mtx", "spa1"),
             MatrixFile("../Matrices/spa2.mtx", "spa2"),
             MatrixFile("../Matrices/vem1.mtx", "vem1"),
@@ -31,7 +32,7 @@ void testMethods() {
         std::cout << "Path: " << matrix.path << std::endl;
         std::cout << "----------------------------------------" << std::endl;
 
-        std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> matrixResults = testMethods<Precision>(matrix.path, matrix.name);
+        std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> matrixResults = testMethods<Precision>(matrix.path, false, matrix.name);
         for (auto &method : matrixResults) {
             std::cout << method.methodName() << std::endl;
             std::cout << "\tTolerance: " << method.tolerance() << std::endl;
