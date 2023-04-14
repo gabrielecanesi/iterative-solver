@@ -32,9 +32,14 @@ public:
     explicit BenchmarkResults(QWidget *parent = nullptr);
     ~BenchmarkResults();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::BenchmarkResults *ui;
     QTableWidget *table;
+
+    void exportCSV();
 };
 
 #endif // BENCHMARKRESULTS_H
