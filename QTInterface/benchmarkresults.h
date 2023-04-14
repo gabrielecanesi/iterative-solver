@@ -5,6 +5,12 @@
 #include <QTableWidget>
 #include <util/Benchmark.h>
 #include "uiutils.h"
+#include "chart.h"
+
+#include <QMainWindow>
+#include <QChart>
+#include <QLineSeries>
+#include <QChartView>
 
 namespace Ui {
 class BenchmarkResults;
@@ -28,7 +34,7 @@ public:
             table->setItem(table->rowCount() - 1, 4, new QTableWidgetItem(UIUtils::formatToScientific(benchmark.relativeError())));
         }
     }
-
+    void buildCharts();
     explicit BenchmarkResults(QWidget *parent = nullptr);
     ~BenchmarkResults();
 
@@ -38,6 +44,7 @@ private slots:
 private:
     Ui::BenchmarkResults *ui;
     QTableWidget *table;
+    Chart *chart;
 
     void exportCSV();
 };

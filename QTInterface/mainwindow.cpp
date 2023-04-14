@@ -47,6 +47,7 @@ MainWindow::~MainWindow()
     delete loadButton;
     delete resultsDialog;
     delete errorDialog;
+    delete thread;
 }
 
 
@@ -66,6 +67,7 @@ void MainWindow::stopAnimation() {
 void MainWindow::on_finishExecution() {
     stopAnimation();
     resultsDialog->show();
+    resultsDialog->buildCharts();
 }
 
 void MainWindow::on_error(const std::string &error) {

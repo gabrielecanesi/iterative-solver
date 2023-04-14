@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR}Charts)
 
 include_directories(../lib)
 add_subdirectory(../lib ../build-lib)
@@ -39,6 +40,9 @@ set(PROJECT_SOURCES
         resources.qrc
         uiutils.cpp
         uiutils.h
+        chart.cpp
+        chart.h
+        chart.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -64,7 +68,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(iterative-solver-ui PRIVATE Qt${QT_VERSION_MAJOR}::Widgets iterative_solver)
+target_link_libraries(iterative-solver-ui PRIVATE Qt${QT_VERSION_MAJOR}::Widgets iterative_solver Qt${QT_VERSION_MAJOR}::Charts)
 
 set_target_properties(iterative-solver-ui PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
