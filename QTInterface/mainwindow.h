@@ -49,6 +49,7 @@ private:
     std::thread *thread;
 
 
+    void deleteThread();
     void stopAnimation();
 
 };
