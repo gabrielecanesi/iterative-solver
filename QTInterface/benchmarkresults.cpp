@@ -55,7 +55,7 @@ void BenchmarkResults::exportCSV() {
         for (unsigned int j = 0; j < table->columnCount() - 1; ++j) {
             stream << table->model()->data(table->model()->index(i, j)).toString().toStdString() << ",";
         }
-        stream << table->model()->data(table->model()->index(table->rowCount() - 1, table->columnCount() - 1)).toString().toStdString() << "\n";
+        stream << table->model()->data(table->model()->index(i, table->columnCount() - 1)).toString().toStdString() << "\n";
     }
 
     QString saveFileName = QFileDialog::getSaveFileName(this, "Save benchmark results", "Benchmark results", "Comma Separated Values (*.csv);; All Files (*)");
