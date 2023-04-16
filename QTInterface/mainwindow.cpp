@@ -41,9 +41,12 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::on_buttonLoad_clicked() {
-    matrixFile = QFileDialog::getOpenFileName(this, "Select a matrix file", "", "Matrix Market Format (*.mtx) ;; All Files (*.*)");
-    selectedLabel->setText("Selected " + matrixFile.split("/").last());
-    runButton->setEnabled(true);
+    QString select = QFileDialog::getOpenFileName(this, "Select a matrix file", "", "Matrix Market Format (*.mtx) ;; All Files (*.*)");
+    if (!select.isEmpty()) {
+        matrixFile = select;
+        selectedLabel->setText("Selected " + matrixFile.split("/").last());
+        runButton->setEnabled(true);
+    }
 }
 
 void MainWindow::stopAnimation() {
