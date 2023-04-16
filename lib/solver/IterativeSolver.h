@@ -17,7 +17,7 @@ private:
     bool skipMatrixCheck = false;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
-        if ((A * currentResult - b).squaredNorm() / b.squaredNorm() >= tol) {
+        if ((A * currentResult - b).norm() / b.norm() >= tol) {
             return false;
         }
         return true;

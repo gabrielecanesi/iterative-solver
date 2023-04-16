@@ -84,7 +84,7 @@ public:
         timer.tic();
         solution = solver->solve(A, b).eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
         timer.toc();
-        M_relativeError = (solution - x).squaredNorm() / x.squaredNorm();
+        M_relativeError = (solution - x).norm() / x.norm();
 
         return getBenchmarkResult();
     }
