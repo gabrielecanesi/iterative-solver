@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "benchmarkresults.h"
 
 #include "../runner.h"
 #include <QFileDialog>
@@ -12,8 +11,6 @@
 #include <QMovie>
 
 #include <QMessageBox>
-
-typedef double precision;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,9 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
         loadingImage->setScaledSize(this->size());
         loadingLabel->setMovie(loadingImage);
     }
-
-    resultsDialog = new BenchmarkResults();
-    resultsDialog->setWindowTitle("Benchmark results");
 
     connect(this, SIGNAL(signal_finish()), this, SLOT(on_finishExecution()));
     connect(this, SIGNAL(signal_error(const std::string&)), this, SLOT(on_error(const std::string&)));
@@ -68,6 +62,9 @@ void MainWindow::deleteThread() {
 
 void MainWindow::on_finishExecution() {
     stopAnimation();
+    ResultsWindow *resultsDialog = new ResultsWindow(this);
+    resultsDialog->setWindowTitle("Results - " + matrixFile.split("/").last());
+    resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
     resultsDialog->show();
     resultsDialog->buildCharts();
 }
@@ -86,8 +83,7 @@ void MainWindow::on_buttonRun_clicked(){
     this->loadButton->setEnabled(false);
     thread = new std::thread([&](){
         try {
-            std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results = testMethods<precision>(matrixFile.toStdString(), checkMatrix);
-            resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
+            results = testMethods<precision>(matrixFile.toStdString(), checkMatrix);
             emit signal_finish();
         } catch (const NonSymmetricAndPositiveDefiniteException &e) {
             emit signal_error("Error! the provided matrix is not positive definite and symmetric.");

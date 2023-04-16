@@ -6,8 +6,11 @@
 #include <thread>
 #include <QLabel>
 #include <QMessageBox>
+#include "resultswindow.h"
+#include <Eigen/Sparse>
+#include <util/Benchmark.h>
 
-#include "benchmarkresults.h"
+typedef double precision;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,11 +46,10 @@ private:
     QLabel *loadingLabel;
     QMovie *loadingImage;
     QString matrixFile;
-    BenchmarkResults *resultsDialog;
     QMessageBox *errorDialog;
     bool checkMatrix;
     std::thread *thread;
-
+    std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results;
 
     void deleteThread();
     void stopAnimation();

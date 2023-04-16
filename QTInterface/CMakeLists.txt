@@ -34,15 +34,12 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        benchmarkresults.cpp
-        benchmarkresults.h
-        benchmarkresults.ui
         resources.qrc
         uiutils.cpp
         uiutils.h
-        chart.cpp
-        chart.h
-        chart.ui
+        resultswindow.cpp
+        resultswindow.h
+        resultswindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
