@@ -10,6 +10,6 @@ void Timer::toc() {
     end = std::chrono::steady_clock::now();
 }
 
-unsigned int Timer::elapsedMilliseconds() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+double Timer::elapsedMilliseconds() const {
+    return ((double) std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count()) / 10e6;
 }

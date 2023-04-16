@@ -68,22 +68,30 @@ void ResultsWindow::buildTimeChart(const QTableWidget * const table) {
     buildChart(table, 2, "Time (ms)", xTimeAxis, yTimeAxis, timeChart, timeChartView, "Tolerance vs time", "frameTime");
 }
 
+
+void ResultsWindow::adjustValuesForLog(int column) {
+    for (unsigned int i = 0; i < table->rowCount(); ++i) {
+        table->model()->data(table->model()->index(i, column)) = table->model()->data(table->model()->index(i, column)).toDouble() + 10e-10;
+    }
+}
+
 void ResultsWindow::buildChart(const QTableWidget * const table, int yCol,const QString &yLabel, QLogValueAxis *xAxis, QLogValueAxis *yAxis, QChart *chart, QChartView *chartView, const QString &title, const QString &frameName) {
     yAxis->setTitleText(yLabel);
     chart->setTitle(title);
 
-    double maxError = 0.0;
-    double minError = 10000000000;
+    double maxValue = 0.0;
+    double minValue = 10000000000;
     for (unsigned int i = 0; i < table->rowCount(); ++i) {
-        if (table->model()->data(table->model()->index(i, yCol)).toDouble() > maxError) {
-            maxError = table->model()->data(table->model()->index(i, yCol)).toDouble();
+        if (table->model()->data(table->model()->index(i, yCol)).toDouble() > maxValue) {
+            maxValue = table->model()->data(table->model()->index(i, yCol)).toDouble();
         }
 
-        if (table->model()->data(table->model()->index(i, yCol)).toDouble() < minError) {
-            minError = table->model()->data(table->model()->index(i, yCol)).toDouble();
+        if (table->model()->data(table->model()->index(i, yCol)).toDouble() < minValue) {
+            minValue = table->model()->data(table->model()->index(i, yCol)).toDouble();
         }
     }
-    yAxis->setRange(minError, maxError);
+
+    yAxis->setRange(minValue, maxValue);
 
     for (unsigned int i = 0; i < 4; ++i) {
         QString methodName = table->model()->data(table->model()->index(i, 0)).toString();
@@ -91,8 +99,8 @@ void ResultsWindow::buildChart(const QTableWidget * const table, int yCol,const 
         series->setName(methodName);
         for (unsigned int j = 0; j < 4; ++j) {
             double tolerance = table->model()->data(table->model()->index(4 * j + i, 1)).toDouble();
-            double relativeError = table->model()->data(table->model()->index(4 * j + i, yCol)).toDouble();
-            *series << QPointF(tolerance, relativeError);
+            double metricValue = table->model()->data(table->model()->index(4 * j + i, yCol)).toDouble();
+            *series << QPointF(tolerance, metricValue);
         }
         chart->addSeries(series);
         series->attachAxis(xAxis);

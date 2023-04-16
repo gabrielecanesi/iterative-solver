@@ -93,7 +93,7 @@ public:
         return BenchmarkResult<Precision>(timer.elapsedMilliseconds(), solver->neededIterations(), M_relativeError);
     }
 
-    unsigned int elapsedMilliseconds() const {
+    double elapsedMilliseconds() const {
         return timer.elapsedMilliseconds();
     }
 

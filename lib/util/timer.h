@@ -10,7 +10,7 @@ private:
 public:
     void tic();
     void toc();
-    unsigned int elapsedMilliseconds() const;
+    double elapsedMilliseconds() const;
 };
 
 #endif

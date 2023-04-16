@@ -50,7 +50,7 @@ private:
     bool checkMatrix;
     std::thread *thread;
     std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results;
-
+    QLabel *selectedLabel;
     void deleteThread();
     void stopAnimation();
 

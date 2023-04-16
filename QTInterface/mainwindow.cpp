@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     runButton = findChild<QPushButton*>("buttonRun");
     loadButton = findChild<QPushButton*>("buttonLoad");
     loadingLabel = findChild<QLabel*>("labelLoading");
+    selectedLabel = findChild<QLabel*>("labelSelected");
     loadingImage = new QMovie(":assets/loading.gif");
     if (loadingImage->isValid()) {
         loadingImage->setScaledSize(this->size());
@@ -40,8 +41,9 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::on_buttonLoad_clicked() {
-    this->matrixFile = QFileDialog::getOpenFileName(this, "Select a matrix file", "", "Matrix Market Format (*.mtx) ;; All Files (*.*)");
-    this->runButton->setEnabled(true);
+    matrixFile = QFileDialog::getOpenFileName(this, "Select a matrix file", "", "Matrix Market Format (*.mtx) ;; All Files (*.*)");
+    selectedLabel->setText("Selected " + matrixFile.split("/").last());
+    runButton->setEnabled(true);
 }
 
 void MainWindow::stopAnimation() {
@@ -64,7 +66,7 @@ void MainWindow::on_finishExecution() {
     stopAnimation();
     ResultsWindow *resultsDialog = new ResultsWindow(this);
     resultsDialog->setWindowTitle("Results - " + matrixFile.split("/").last());
-    resultsDialog->buildTable<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>>(results);
+    resultsDialog->buildTable<precision, Eigen::SparseMatrix<precision>>(results);
     resultsDialog->show();
     resultsDialog->buildCharts();
 }
