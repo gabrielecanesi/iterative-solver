@@ -52,7 +52,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
                                                                                         bool skipMatrixCheck,
                                                                                         std::string matrixName = "") {
 
-    std::vector<Precision> testTolerances = {10e-4, 10e-6, 10e-8, 10e-10};
+    std::vector<Precision> testTolerances = {1e-4, 1e-6, 1e-8, 1e-10};
 
     std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> results;
 

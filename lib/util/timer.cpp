@@ -11,5 +11,5 @@ void Timer::toc() {
 }
 
 double Timer::elapsedMilliseconds() const {
-    return ((double) std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count()) / 10e6;
+    return ((double) std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count()) / 1e6;
 }

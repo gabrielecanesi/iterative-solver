@@ -44,9 +44,9 @@ void ResultsWindow::init(QChart **chart, QLogValueAxis **xAxis, QLogValueAxis **
     *chartView = new QChartView(*chart);
     (*xAxis)->setTitleText("Tolerance");
     (*xAxis)->setBase(10);
-    (*xAxis)->setMin(10e-10);
+    (*xAxis)->setMin(1e-10);
     (*xAxis)->setLabelFormat("%g");
-    (*xAxis)->setMax(10e-4);
+    (*xAxis)->setMax(1e-4);
     (*yAxis)->setBase(10);
     (*xAxis)->setMinorTickCount(-1);
     (*yAxis)->setMinorTickCount(-1);

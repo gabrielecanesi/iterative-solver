@@ -16,7 +16,6 @@ struct MatrixFile {
 
 void testMethods() {
     std::vector<MatrixFile> matrices = {
-            MatrixFile("../Matrices/spa1NonSymmAndPD.mtx", "spa1NonSymmAndPD"),
             MatrixFile("../Matrices/spa1.mtx", "spa1"),
             MatrixFile("../Matrices/spa2.mtx", "spa2"),
             MatrixFile("../Matrices/vem1.mtx", "vem1"),
