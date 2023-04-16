@@ -24,6 +24,9 @@ private:
     }
 
     void checkSymmetricAndPositiveDefinite(const Eigen::SparseMatrix<T> &A) {
+        if (!A.isApprox(A.transpose())) {
+            throw NonSymmetricAndPositiveDefiniteException();
+        }
         Eigen::SimplicialLLT<Eigen::SparseMatrix<T>> llt(A);
         if (llt.info() == Eigen::NumericalIssue) {
             throw NonSymmetricAndPositiveDefiniteException();
@@ -31,6 +34,9 @@ private:
     }
 
     void checkSymmetricAndPositiveDefinite(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
+        if (!A.isApprox(A.transpose())) {
+            throw NonSymmetricAndPositiveDefiniteException();
+        }
         Eigen::LLT<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>> llt(A);
         if (llt.info() == Eigen::NumericalIssue) {
             throw NonSymmetricAndPositiveDefiniteException();
