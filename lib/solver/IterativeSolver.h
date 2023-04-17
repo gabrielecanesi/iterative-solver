@@ -6,6 +6,7 @@
 #include <Eigen/Cholesky>
 #include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
 #include "norm.h"
+#include "exceptions/NonSquareMatrixException.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -84,6 +85,10 @@ public:
     virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
+        if (A.rows() != A.cols()) {
+            throw NonSquareMatrixException();
+        }
+        
         if(!skipMatrixCheck) {
             checkSymmetricAndPositiveDefinite(A);
         }

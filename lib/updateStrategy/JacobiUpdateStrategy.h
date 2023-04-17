@@ -10,7 +10,11 @@ namespace UpdateStrategy {
 
     public:
         JacobiUpdateStrategy() : Strategy<T, MatrixType>() {}
-        JacobiUpdateStrategy(T w) : Strategy<T, MatrixType>(), w(w) {}
+        JacobiUpdateStrategy(T w) : Strategy<T, MatrixType>(), w(w) {
+            if (w <= 0 || w > 1) {
+                throw WrongParameterValueException(0, 1, false, true);
+            }
+        }
 
         virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
             Strategy<T, MatrixType>::init(A, b);

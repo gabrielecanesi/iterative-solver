@@ -5,13 +5,19 @@
 #include "./Strategy.h"
 #include "solver/BackwardSubstitutionSolver.h"
 
+#include "exceptions/WrongParameterValueException.h"
+
 namespace UpdateStrategy {
 
     template<typename T, typename MatrixType>
     class GaussSeidelUpdateStrategy : public Strategy<T, MatrixType> {
 
     public:
-        GaussSeidelUpdateStrategy(T w) : Strategy<T, MatrixType>(), P(nullptr), w(w) {};
+        GaussSeidelUpdateStrategy(T w) : Strategy<T, MatrixType>(), P(nullptr), w(w) {
+            if (w <= 0 || w >= 2) {
+                throw WrongParameterValueException(0, 2, false, false);
+            }
+        };
         GaussSeidelUpdateStrategy() : Strategy<T, MatrixType>(), P(nullptr), w(1) {};
 
         virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {

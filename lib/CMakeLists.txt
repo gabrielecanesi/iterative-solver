@@ -21,5 +21,5 @@ if(NOT eigen_POPULATED)
 endif()
 
 include_directories(${eigen_SOURCE_DIR})
-add_library(iterative_solver STATIC util/timer.cpp)
+add_library(iterative_solver STATIC util/timer.cpp exceptions/WrongParameterValueException.cpp)
 target_link_libraries(iterative_solver)
