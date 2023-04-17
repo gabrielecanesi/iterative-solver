@@ -5,7 +5,6 @@
 #include <QChart>
 #include <QChartView>
 #include <QLineSeries>
-#include <QLineSeries>
 #include <QLogValueAxis>
 #include <QTableView>
 #include <QFileDialog>
