@@ -5,6 +5,7 @@
 #include "updateStrategy/Strategy.h"
 #include <Eigen/Cholesky>
 #include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
+#include "norm.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -15,12 +16,29 @@ private:
     UpdateStrategy::Strategy<T, MatrixType>* updateStrategy;
     T tol;
     bool skipMatrixCheck = false;
+    NormType normType;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
-        if ((A * currentResult - b).norm() / b.norm() >= tol) {
-            return false;
+        double abNorm;
+        double bNorm;
+        switch (normType) {
+            case NormType::EUCLIDIAN:
+                abNorm = (A * currentResult- b).norm();
+                bNorm = b.norm();
+                break;
+            case NormType::MANHATTAN:
+                abNorm = (A * currentResult - b).template lpNorm<1>();
+                bNorm = b.template lpNorm<1>();
+                break;
+            case NormType::INFTY:
+                abNorm = (A * currentResult - b).template lpNorm<Eigen::Infinity>();
+                bNorm = b.template lpNorm<Eigen::Infinity>();
+                break;
+            default:
+                break;
         }
-        return true;
+        
+        return (abNorm / bNorm) < tol;
     }
 
     void checkSymmetricAndPositiveDefinite(const Eigen::SparseMatrix<T> &A) {
@@ -44,7 +62,12 @@ private:
     }
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck) : AbstractSolver<T, MatrixType>(), maxIter(maxIter), updateStrategy(updateStrategy), tol(tol), skipMatrixCheck(skipMatrixCheck) {}
+    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDIAN) : AbstractSolver<T, MatrixType>(),
+                                                                                                                                        maxIter(maxIter),
+                                                                                                                                        updateStrategy(updateStrategy),
+                                                                                                                                        tol(tol),
+                                                                                                                                        skipMatrixCheck(skipMatrixCheck),
+                                                                                                                                        normType(normType) {}
     IterativeSolver(const IterativeSolver<T, MatrixType> &other) : updateStrategy(nullptr) {
         if (other.updateStrategy != nullptr) {
             this->updateStrategy = other.updateStrategy->clone();
@@ -62,11 +85,7 @@ public:
 
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
         if(!skipMatrixCheck) {
-            try {
-                checkSymmetricAndPositiveDefinite(A);
-            } catch (...) {
-                throw;
-            }
+            checkSymmetricAndPositiveDefinite(A);
         }
 
         updateStrategy->init(A, b);

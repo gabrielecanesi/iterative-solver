@@ -2,9 +2,11 @@
 #define SOLVER_H
 
 #include "updateStrategy/Strategy.h"
+#include "norm.h"
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+
 
 template<typename T, typename MatrixType>
 class AbstractSolver {

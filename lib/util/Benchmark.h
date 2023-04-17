@@ -5,6 +5,7 @@
 #include "solver/IterativeSolver.h"
 #include "updateStrategy/Strategy.h"
 #include "util/timer.h"
+#include "solver/norm.h"
 
 template<typename Precision>
 struct BenchmarkResult {
@@ -70,17 +71,19 @@ public:
     }
 
     BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
-                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x) {
+                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
+                                   NormType normType = NormType::EUCLIDIAN) {
 
-        return run(A, b, maxIter, tolerance, strategy, x, false);
+        return run(A, b, maxIter, tolerance, strategy, x, false, normType);
     }
 
     BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy,
                                    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
-                                   bool skipMatrixCheck) {
+                                   bool skipMatrixCheck,
+                                   NormType normType = NormType::EUCLIDIAN) {
 
-        solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck);
+        solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck, normType);
         timer.tic();
         solution = solver->solve(A, b).eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
         timer.toc();

@@ -8,7 +8,6 @@
 #include <QLineSeries>
 #include <QLogValueAxis>
 #include <QTableView>
-#include <iostream>
 #include <QFileDialog>
 #include <fstream>
 #include <sstream>

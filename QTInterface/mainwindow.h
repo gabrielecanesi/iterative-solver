@@ -9,6 +9,7 @@
 #include "resultswindow.h"
 #include <Eigen/Sparse>
 #include <util/Benchmark.h>
+#include <solver/norm.h>
 
 typedef double precision;
 
@@ -35,6 +36,8 @@ private slots:
 
     void on_checkBox_stateChanged(int arg1);
 
+    void on_comboNorm_currentIndexChanged(int index);
+
 signals:
     void signal_finish();
     void signal_error(const std::string &error);
@@ -48,6 +51,7 @@ private:
     QString matrixFile;
     QMessageBox *errorDialog;
     bool checkMatrix;
+    NormType normType;
     std::thread *thread;
     std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results;
     QLabel *selectedLabel;

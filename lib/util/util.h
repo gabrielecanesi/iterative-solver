@@ -2,7 +2,7 @@
 #define UTIL_H
 
 #include <vector>
-#include <iostream>
+#include <fstream>
 
 namespace Util {
     template<typename T>

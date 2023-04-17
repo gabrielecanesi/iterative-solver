@@ -9,6 +9,7 @@
 #include <Eigen/Sparse>
 #include <thread>
 #include <QMovie>
+#include <solver/norm.h>
 
 #include <QMessageBox>
 
@@ -17,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow),
     errorDialog(new QMessageBox()),
     thread(nullptr),
-    checkMatrix(false)
+    checkMatrix(false),
+    normType(NormType::EUCLIDIAN)
 {
     ui->setupUi(this);
     runButton = findChild<QPushButton*>("buttonRun");
@@ -88,7 +90,7 @@ void MainWindow::on_buttonRun_clicked(){
     this->loadButton->setEnabled(false);
     thread = new std::thread([&](){
         try {
-            results = testMethods<precision>(matrixFile.toStdString(), checkMatrix);
+            results = testMethods<precision>(matrixFile.toStdString(), checkMatrix, "", normType);
             emit signal_finish();
         } catch (const NonSymmetricAndPositiveDefiniteException &e) {
             emit signal_error("Error! the provided matrix is not positive definite and symmetric.");
@@ -100,5 +102,19 @@ void MainWindow::on_buttonRun_clicked(){
 
 void MainWindow::on_checkBox_stateChanged(int arg1) {
     checkMatrix = arg1 != 0;
+}
+
+
+void MainWindow::on_comboNorm_currentIndexChanged(int index) {
+    switch (index) {
+    case 0:
+        normType = NormType::EUCLIDIAN;
+        break;
+    case 1:
+        normType = NormType::MANHATTAN;
+        break;
+    case 2:
+        normType = NormType::INFTY;
+    }
 }
 
