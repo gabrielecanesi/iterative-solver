@@ -38,6 +38,10 @@ private slots:
 
     void on_comboNorm_currentIndexChanged(int index);
 
+    void on_spinJacobi_valueChanged(double arg1);
+
+    void on_spinGauss_valueChanged(double arg1);
+
 signals:
     void signal_finish();
     void signal_error(const std::string &error);
@@ -52,6 +56,8 @@ private:
     QMessageBox *errorDialog;
     bool checkMatrix;
     NormType normType;
+    precision jacobiW;
+    precision gaussW;
     std::thread *thread;
     std::vector<IterativeBenchmark<precision, Eigen::SparseMatrix<precision>>> results;
     QLabel *selectedLabel;

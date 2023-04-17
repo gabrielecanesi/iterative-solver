@@ -19,7 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     errorDialog(new QMessageBox()),
     thread(nullptr),
     checkMatrix(false),
-    normType(NormType::EUCLIDEAN)
+    normType(NormType::EUCLIDEAN),
+    jacobiW(1),
+    gaussW(1)
 {
     ui->setupUi(this);
     runButton = findChild<QPushButton*>("buttonRun");
@@ -28,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     selectedLabel = findChild<QLabel*>("labelSelected");
     loadingImage = new QMovie(":assets/loading.gif");
     if (loadingImage->isValid()) {
-        loadingImage->setScaledSize(this->size());
+        loadingImage->setScaledSize(this->size() * 0.45);
         loadingLabel->setMovie(loadingImage);
     }
 
@@ -55,6 +57,7 @@ void MainWindow::stopAnimation() {
     loadingImage->stop();
     loadingLabel->hide();
     loadingLabel->setText("");
+    findChild<QLabel*>("labelLoadingText")->setText("");
     runButton->setEnabled(true);
     loadButton->setEnabled(true);
 }
@@ -86,11 +89,12 @@ void MainWindow::on_buttonRun_clicked(){
     deleteThread();
     loadingLabel->show();
     loadingImage->start();
+    findChild<QLabel*>("labelLoadingText")->setText("Loading...");
     this->runButton->setEnabled(false);
     this->loadButton->setEnabled(false);
     thread = new std::thread([&](){
         try {
-            results = testMethods<precision>(matrixFile.toStdString(), checkMatrix, "", normType);
+            results = testMethods<precision>(matrixFile.toStdString(), checkMatrix, "", gaussW, jacobiW, normType);
             emit signal_finish();
         } catch (const NonSymmetricAndPositiveDefiniteException &e) {
             emit signal_error("Error! the provided matrix is not positive definite and symmetric.");
@@ -116,5 +120,15 @@ void MainWindow::on_comboNorm_currentIndexChanged(int index) {
     case 2:
         normType = NormType::INFTY;
     }
+}
+
+
+void MainWindow::on_spinJacobi_valueChanged(double arg1) {
+    jacobiW = arg1;
+}
+
+
+void MainWindow::on_spinGauss_valueChanged(double arg1) {
+    gaussW = arg1;
 }
 

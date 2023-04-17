@@ -5,7 +5,7 @@
 #include <util/util.h>
 #include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
 
-typedef float Precision;
+typedef double Precision;
 
 struct MatrixFile {
     std::string path;

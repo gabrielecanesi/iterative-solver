@@ -22,6 +22,8 @@ template<typename Precision>
 std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testMethods(const std::string &filename,
                                                                                         Precision tolerance,
                                                                                         bool skipMatrixCheck,
+                                                                                        Precision gaussW,
+                                                                                        Precision jacobiW,
                                                                                         std::string matrixName = "",
                                                                                         NormType normType = NormType::EUCLIDEAN) {
 
@@ -33,8 +35,8 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
     std::vector<std::shared_ptr<Strategy<Precision, Eigen::SparseMatrix<Precision>>>> methods {
             std::make_shared<GradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
             std::make_shared<ConjugateGradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
-            std::make_shared<JacobiUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
-            std::make_shared<GaussSeidelUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
+            std::make_shared<JacobiUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(jacobiW),
+            std::make_shared<GaussSeidelUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(gaussW),
     };
 
     std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> results;
@@ -53,6 +55,8 @@ template<typename Precision>
 std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testMethods(const std::string &filename,
                                                                                         bool skipMatrixCheck,
                                                                                         std::string matrixName = "",
+                                                                                        Precision gaussW = 1,
+                                                                                        Precision jacobiW = 1,
                                                                                         NormType normType = NormType::EUCLIDEAN) {
 
     std::vector<Precision> testTolerances = {1e-4, 1e-6, 1e-8, 1e-10};
@@ -60,7 +64,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
     std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> results;
 
     for (Precision tol : testTolerances) {
-        std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> benchMethods = testMethods<Precision>(filename, tol, skipMatrixCheck, matrixName, normType);
+        std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> benchMethods = testMethods<Precision>(filename, tol, skipMatrixCheck, gaussW, jacobiW, matrixName, normType);
         results.insert(results.end(), benchMethods.begin(), benchMethods.end());
     }
     return results;
