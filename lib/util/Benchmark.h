@@ -72,7 +72,7 @@ public:
 
     BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
-                                   NormType normType = NormType::EUCLIDIAN) {
+                                   NormType normType = NormType::EUCLIDEAN) {
 
         return run(A, b, maxIter, tolerance, strategy, x, false, normType);
     }
@@ -81,7 +81,7 @@ public:
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy,
                                    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
                                    bool skipMatrixCheck,
-                                   NormType normType = NormType::EUCLIDIAN) {
+                                   NormType normType = NormType::EUCLIDEAN) {
 
         solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck, normType);
         timer.tic();

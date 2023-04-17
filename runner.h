@@ -23,7 +23,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
                                                                                         Precision tolerance,
                                                                                         bool skipMatrixCheck,
                                                                                         std::string matrixName = "",
-                                                                                        NormType normType = NormType::EUCLIDIAN) {
+                                                                                        NormType normType = NormType::EUCLIDEAN) {
 
     Eigen::SparseMatrix<Precision> A = MatrixReader::readSparseFromFile<Precision>(filename);
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> x(A.rows(), 1);
@@ -53,7 +53,7 @@ template<typename Precision>
 std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testMethods(const std::string &filename,
                                                                                         bool skipMatrixCheck,
                                                                                         std::string matrixName = "",
-                                                                                        NormType normType = NormType::EUCLIDIAN) {
+                                                                                        NormType normType = NormType::EUCLIDEAN) {
 
     std::vector<Precision> testTolerances = {1e-4, 1e-6, 1e-8, 1e-10};
 

@@ -2,7 +2,7 @@
 #define NORM_H
 
 enum class NormType {
-    EUCLIDIAN,
+    EUCLIDEAN,
     MANHATTAN,
     INFTY
 };

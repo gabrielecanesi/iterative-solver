@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     errorDialog(new QMessageBox()),
     thread(nullptr),
     checkMatrix(false),
-    normType(NormType::EUCLIDIAN)
+    normType(NormType::EUCLIDEAN)
 {
     ui->setupUi(this);
     runButton = findChild<QPushButton*>("buttonRun");
@@ -108,7 +108,7 @@ void MainWindow::on_checkBox_stateChanged(int arg1) {
 void MainWindow::on_comboNorm_currentIndexChanged(int index) {
     switch (index) {
     case 0:
-        normType = NormType::EUCLIDIAN;
+        normType = NormType::EUCLIDEAN;
         break;
     case 1:
         normType = NormType::MANHATTAN;

@@ -49,7 +49,7 @@
        <widget class="QComboBox" name="comboNorm">
         <item>
          <property name="text">
-          <string>Euclidian</string>
+          <string>Euclidean</string>
          </property>
         </item>
         <item>

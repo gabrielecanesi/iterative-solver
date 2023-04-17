@@ -22,7 +22,7 @@ private:
         double abNorm;
         double bNorm;
         switch (normType) {
-            case NormType::EUCLIDIAN:
+            case NormType::EUCLIDEAN:
                 abNorm = (A * currentResult- b).norm();
                 bNorm = b.norm();
                 break;
@@ -62,7 +62,7 @@ private:
     }
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDIAN) : AbstractSolver<T, MatrixType>(),
+    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN) : AbstractSolver<T, MatrixType>(),
                                                                                                                                         maxIter(maxIter),
                                                                                                                                         updateStrategy(updateStrategy),
                                                                                                                                         tol(tol),
