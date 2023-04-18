@@ -1,1 +1,9 @@
 *.DS_Store
+*.aux
+*.pdf
+*.bcf
+*.log
+*.out
+*.run*
+*.toc
+*.synctex*
