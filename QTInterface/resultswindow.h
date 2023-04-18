@@ -35,9 +35,6 @@ public:
             table->setItem(table->rowCount() - 1, 3, new QTableWidgetItem(UIUtils::formatToScientific(benchmark.neededIterations())));
             table->setItem(table->rowCount() - 1, 4, new QTableWidgetItem(UIUtils::formatToScientific(benchmark.relativeError())));
         }
-
-        adjustValuesForLog(2);
-        adjustValuesForLog(4);
     }
     void buildCharts();
     ~ResultsWindow();
@@ -60,7 +57,6 @@ private:
     void initErrorTolChart();
     void initTimeChart();
     void resizeEvent(QResizeEvent *event);
-    void adjustValuesForLog(int column);
     void init(QChart **chart, QLogValueAxis **xAxis, QLogValueAxis **yAxis, QChartView **chartView, const QString &frameName);
     void buildChart(const QTableWidget * const table, int yCol, const QString &yLabel, QLogValueAxis *xAxis, QLogValueAxis *yAxis, QChart *chart, QChartView *chartView, const QString &title, const QString &frameName);
 };

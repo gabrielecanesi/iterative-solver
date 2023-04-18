@@ -67,12 +67,6 @@ void ResultsWindow::buildTimeChart(const QTableWidget * const table) {
 }
 
 
-void ResultsWindow::adjustValuesForLog(int column) {
-    for (unsigned int i = 0; i < table->rowCount(); ++i) {
-        table->model()->data(table->model()->index(i, column)) = table->model()->data(table->model()->index(i, column)).toDouble() + 10e-10;
-    }
-}
-
 void ResultsWindow::buildChart(const QTableWidget * const table, int yCol,const QString &yLabel, QLogValueAxis *xAxis, QLogValueAxis *yAxis, QChart *chart, QChartView *chartView, const QString &title, const QString &frameName) {
     yAxis->setTitleText(yLabel);
     chart->setTitle(title);
