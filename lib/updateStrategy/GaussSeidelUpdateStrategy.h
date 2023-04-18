@@ -19,6 +19,10 @@ namespace UpdateStrategy {
             }
         };
         GaussSeidelUpdateStrategy() : Strategy<T, MatrixType>(), P(nullptr), w(1) {};
+        GaussSeidelUpdateStrategy(const GaussSeidelUpdateStrategy &other) : Strategy<T, MatrixType>(other) {
+            this->w = other.w;
+            this->P = other.P;
+        }
 
         virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
             Strategy<T, MatrixType>::init(A, b);
@@ -38,14 +42,7 @@ namespace UpdateStrategy {
         }
 
         virtual Strategy<T, MatrixType> *clone() override {
-            GaussSeidelUpdateStrategy<T, MatrixType> *ret = new GaussSeidelUpdateStrategy<T, MatrixType>();
-            ret->w = this->w;
-            ret->P = P;
-            ret->A = this->A;
-            ret->b = this->b;
-            ret->result = this->result;
-
-            return ret;
+            return new GaussSeidelUpdateStrategy<T, MatrixType>(*this);
         }
 
         virtual std::string name() const override {

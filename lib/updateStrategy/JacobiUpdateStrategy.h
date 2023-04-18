@@ -16,6 +16,11 @@ namespace UpdateStrategy {
             }
         }
 
+        JacobiUpdateStrategy(const JacobiUpdateStrategy &other) : Strategy<T, MatrixType>() {
+            this->w = other.w;
+            this->PInverse = other.PInverse;
+        }
+
         virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
             Strategy<T, MatrixType>::init(A, b);
             PInverse = new Eigen::DiagonalMatrix<T, Eigen::Dynamic>(this->A->diagonal());
@@ -40,14 +45,7 @@ namespace UpdateStrategy {
         }
 
         virtual Strategy<T, MatrixType> *clone() override {
-            JacobiUpdateStrategy<T, MatrixType> *ret = new JacobiUpdateStrategy<T, MatrixType>();
-            ret->w = w;
-            ret->PInverse = PInverse;
-            ret->A = this->A;
-            ret->b = this->b;
-            ret->result = this->result;
-
-            return ret;
+            return new JacobiUpdateStrategy<T, MatrixType>(*this);
         }
 
     };

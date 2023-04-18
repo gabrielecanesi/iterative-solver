@@ -19,6 +19,13 @@ namespace UpdateStrategy {
 
         virtual ~Strategy() {}
 
+        Strategy(){}
+        Strategy(const Strategy &other) {
+            this->A = other.A;
+            this->b = other.b;
+            this->result = other.result;
+        }
+
         virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
             this->A = &A;
             this->b = &b;

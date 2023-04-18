@@ -21,6 +21,11 @@ namespace UpdateStrategy {
             delete residual;
         }
 
+        ConjugateGradientUpdateStrategy(const ConjugateGradientUpdateStrategy &strategy) : Strategy<T, MatrixType>(strategy) {
+            this->d = new Eigen::Matrix<T, Eigen::Dynamic, 1>(*strategy.d);
+            this->residual = new Eigen::Matrix<T, Eigen::Dynamic, 1>(*strategy.d);
+        }
+
         friend class IterativeSolver<T, MatrixType>;
 
     private:
@@ -65,17 +70,7 @@ namespace UpdateStrategy {
         }
 
         virtual Strategy<T, MatrixType> *clone() override {
-            ConjugateGradientUpdateStrategy<T, MatrixType> *ret = new ConjugateGradientUpdateStrategy<T, MatrixType>();
-            ret->A = this->A;
-            ret->b = this->b;
-            ret->result = this->result;
-            ret->d = new Eigen::Matrix<T, Eigen::Dynamic, 1>();
-            ret->residual = new Eigen::Matrix<T, Eigen::Dynamic, 1>();
-            *ret->d = *d;
-            *ret->residual = *residual;
-
-
-            return ret;
+            return new ConjugateGradientUpdateStrategy<T, MatrixType>(*this);
         }
     };
 }

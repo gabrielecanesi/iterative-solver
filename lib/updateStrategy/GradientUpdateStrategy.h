@@ -10,6 +10,7 @@ namespace UpdateStrategy {
 
     public:
         GradientUpdateStrategy() : Strategy<T, MatrixType>() {}
+        GradientUpdateStrategy(const GradientUpdateStrategy& other) : Strategy<T, MatrixType>(other) {}
 
         friend class IterativeSolver<T, MatrixType>;
 
@@ -38,12 +39,7 @@ namespace UpdateStrategy {
         }
 
         virtual Strategy<T, MatrixType> *clone() override {
-            GradientUpdateStrategy<T, MatrixType> *ret = new GradientUpdateStrategy<T, MatrixType>();
-            ret->A = this->A;
-            ret->b = this->b;
-            ret->result = this->result;
-
-            return ret;
+            return new GradientUpdateStrategy<T, MatrixType>(*this);
         }
     };
 
