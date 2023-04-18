@@ -98,6 +98,8 @@ void MainWindow::on_buttonRun_clicked(){
             emit signal_finish();
         } catch (const NonSymmetricAndPositiveDefiniteException &e) {
             emit signal_error("Error! the provided matrix is not positive definite and symmetric.");
+        } catch (const NonSquareMatrixException &e) {
+            emit signal_error("Error! the provided matrix is not square.");
         }
     });
 
