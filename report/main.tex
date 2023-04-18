@@ -1,0 +1,72 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\raggedbottom
+
+\usepackage{mlmodern}
+\usepackage{csquotes}
+\usepackage{parskip}
+\usepackage[italian]{babel}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{changepage}
+\usepackage{fancyvrb}
+\usepackage[final]{pdfpages}
+\usepackage{placeins}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{tcolorbox}
+\usepackage{xurl}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{biblatex}
+\usepackage{array}
+\usepackage{pdfpages}
+\usepackage{subfig}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+
+\hypersetup{
+	colorlinks=false,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black,
+	allbordercolors=white
+}
+
+
+
+\setlength{\headheight}{14pt}
+
+\begin{document}
+	\input{cover}
+	\thispagestyle{empty}
+	\newpage
+	\pagestyle{fancy}
+	\pagenumbering{roman}
+	
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\definecolor{fireenginered}{rgb}{0.81, 0.09, 0.13}
+	\hypersetup{
+		linkbordercolor=fireenginered
+	}
+	\pagenumbering{arabic}
+	
+	\input{section/introduction}
+	
+	\FloatBarrier
+	\newpage
+	\printbibliography
+\end{document}
+	
