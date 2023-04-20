@@ -29,6 +29,7 @@
 \usepackage{subfig}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepackage{listings}
 \usepgfplotslibrary{groupplots}
 \pgfplotsset{compat=1.18}
 
@@ -45,6 +46,29 @@
 }
 
 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                   
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=true,                  
+	tabsize=1
+}
+
+\lstset{style=mystyle}
 
 \setlength{\headheight}{14pt}
 
@@ -69,7 +93,36 @@
 	\input{section/introduction}
 	\input{section/architecture}
 	\input{section/analysis}
+	\appendix
+	\section{Compilazione ed esecuzione dei progetti}
+	Per poter compilare con successo tutti i sottoprogetti, è necessario avere installato CMake alla versione almeno 3.20.
 	
+	È importante notare che, durante la compilazione de progetti, viene scaricato automaticamente Eigen.
+	
+	\subsection{CLI}
+	È necessario anche avere installato GNU Make.
+	Per compilare con successo l'applicazione cli, è necessario eseguire i seguenti comandi:
+	\begin{itemize}
+		\item Linux/MacOS: 
+		\begin{lstlisting}[language=Bash]
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ../cli
+make \end{lstlisting}
+	\end{itemize}
+	
+	
+	Al momento dell'esecuzione del comando CMake, automaticamente, viene importato il progetto della libreria e viene scaricato Eigen, per poter effettuare la compilazione finale. L'output finale generato è l'applicazione chiamata \texttt{iterative-solver} nella cartella \path{build}.
+	
+\subsection{Qt}
+È necessario avere installato prima della compilazione il pacchetto aggiuntivo di Qt \texttt{Charts}.
+	\begin{itemize}
+	\item Linux/MacOS: 
+	\begin{lstlisting}[language=Bash]
+mkdir build-qt && cd build-qt
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=<installazione di Qt>/<versione>/<sistema> ../QTInterface
+make \end{lstlisting}
+\end{itemize}
+Il valore del prefix path dipende fortemente dalla propria installazione e dal proprio sistema operativo. In questo caso, viene generata l'applicazione chiamata \texttt{iterative-solver-ui} nella cartella \path{build}.
 	\FloatBarrier
 	\newpage
 	\printbibliography
