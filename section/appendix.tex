@@ -10,9 +10,9 @@ Per compilare con successo l'applicazione cli, è necessario eseguire i seguenti
 \begin{itemize}
 	\item Linux/MacOS: 
 	\begin{lstlisting}[language=Bash]
-		mkdir build && cd build
-		cmake -DCMAKE_BUILD_TYPE=Release ../cli
-		make \end{lstlisting}
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ../cli
+make \end{lstlisting}
 \end{itemize}
 
 
@@ -23,8 +23,8 @@ Al momento dell'esecuzione del comando CMake, automaticamente, viene importato i
 \begin{itemize}
 	\item Linux/MacOS: 
 	\begin{lstlisting}[language=Bash]
-		mkdir build-qt && cd build-qt
-		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=<installazione di Qt>/<versione>/<sistema> ../QTInterface
-		make \end{lstlisting}
+mkdir build-qt && cd build-qt
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=<installazione di Qt>/<versione>/<sistema> ../QTInterface
+make \end{lstlisting}
 \end{itemize}
 Il valore del prefix path dipende fortemente dalla propria installazione e dal proprio sistema operativo. In questo caso, viene generata l'applicazione chiamata \texttt{iterative-solver-ui} nella cartella \path{build}.
