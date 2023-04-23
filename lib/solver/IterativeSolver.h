@@ -5,8 +5,9 @@
 #include "updateStrategy/Strategy.h"
 #include <Eigen/Cholesky>
 #include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
-#include "norm.h"
+#include "NormType.h"
 #include "exceptions/NonSquareMatrixException.h"
+#include "constants.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -88,7 +89,12 @@ public:
         if (A.rows() != A.cols()) {
             throw NonSquareMatrixException();
         }
-        
+
+        if (b.isZero(ZERO_THRESHOLD)) {
+            return Eigen::Matrix<T, Eigen::Dynamic, 1>::Zero(b.rows(), 1);
+        }
+
+
         if(!skipMatrixCheck) {
             checkSymmetricAndPositiveDefinite(A);
         }

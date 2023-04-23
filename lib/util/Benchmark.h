@@ -5,7 +5,7 @@
 #include "solver/IterativeSolver.h"
 #include "updateStrategy/Strategy.h"
 #include "util/timer.h"
-#include "solver/norm.h"
+#include "solver/NormType.h"
 
 template<typename Precision>
 struct BenchmarkResult {

@@ -2,7 +2,7 @@
 #define SOLVER_H
 
 #include "updateStrategy/Strategy.h"
-#include "norm.h"
+#include "NormType.h"
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
