@@ -7,11 +7,13 @@
 #include "util/timer.h"
 #include "solver/NormType.h"
 
-template<typename Precision>
+template<typename Precision, typename MatrixType>
 struct BenchmarkResult {
 
     BenchmarkResult(): elapsedMillisecondsMean(0), neededIterationsMean(0), relativeErrorMean(0), allValues() {}
-    BenchmarkResult(unsigned int elapsedMilliseconds, unsigned int neededIterations, Precision relativeError) : elapsedMillisecondsMean(elapsedMilliseconds), neededIterationsMean(neededIterations), relativeErrorMean(relativeError), allValues() {
+    BenchmarkResult(unsigned int elapsedMilliseconds, IterativeSolverResult<Precision, MatrixType> *results, Precision relativeError) :
+                elapsedMillisecondsMean(elapsedMilliseconds), results(results), neededIterationsMean(results->neededIterations()),
+                relativeErrorMean(relativeError), allValues() {
         allValues.push_back(*this);
     }
 
@@ -39,13 +41,14 @@ private:
         ElapsedMillisecondsVariance = std::pow(((ElapsedMillisecondsVariance / allValues.size()) - elapsedMillisecondsMean), 2);
     }
 
-    std::vector<BenchmarkResult<Precision>> allValues;
+    std::vector<BenchmarkResult<Precision, MatrixType>> allValues;
 
 public:
     unsigned int elapsedMillisecondsMean;
     double ElapsedMillisecondsVariance;
     unsigned int neededIterationsMean;
     Precision relativeErrorMean;
+    IterativeSolverResult<Precision, MatrixType> *results;
 
 };
 
@@ -70,14 +73,14 @@ public:
         delete solver;
     }
 
-    BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
+    BenchmarkResult<Precision, MatrixType> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
                                    NormType normType = NormType::EUCLIDEAN) {
 
         return run(A, b, maxIter, tolerance, strategy, x, false, normType);
     }
 
-    BenchmarkResult<Precision> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
+    BenchmarkResult<Precision, MatrixType> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
                                    Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy,
                                    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
                                    bool skipMatrixCheck,
@@ -85,16 +88,17 @@ public:
 
         solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck, normType);
         timer.tic();
-        solution = solver->solve(A, b).eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
+        IterativeSolverResult<Precision, MatrixType> *results = static_cast<IterativeSolverResult<Precision, MatrixType>*>(solver->solve(A, b));
+        results->solution()->eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
         timer.toc();
 
-        M_relativeError = (solution - x).norm() / x.norm();
+        M_relativeError = (*results->solution() - x).norm() / x.norm();
 
-        return getBenchmarkResult();
+        return getBenchmarkResult(results);
     }
 
-    BenchmarkResult<Precision> getBenchmarkResult() {
-        return BenchmarkResult<Precision>(timer.elapsedMilliseconds(), solver->neededIterations(), M_relativeError);
+    BenchmarkResult<Precision, MatrixType> getBenchmarkResult(IterativeSolverResult<Precision, MatrixType> *results) {
+        return BenchmarkResult<Precision, MatrixType>(timer.elapsedMilliseconds(), results, M_relativeError);
     }
 
     double elapsedMilliseconds() const {

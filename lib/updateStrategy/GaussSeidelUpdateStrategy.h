@@ -37,7 +37,7 @@ namespace UpdateStrategy {
             Eigen::Matrix<T, Eigen::Dynamic, 1> residual = compute_residual();
 
 
-            this->result = this->result - solver.solve(*P, residual);
+            this->result = this->result - *solver.solve(*P, residual)->solution();
             return &this->result;
         }
 
