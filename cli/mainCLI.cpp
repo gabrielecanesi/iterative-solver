@@ -8,12 +8,6 @@
 
 typedef double Precision;
 
-struct MatrixFile {
-    std::string path;
-    std::string name;
-
-    MatrixFile(std::string path, std::string name) : path(path), name(name) {}
-};
 
 int main(int argc, char *argv[]) {
     if(argc <= 1) {

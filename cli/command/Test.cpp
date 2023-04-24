@@ -9,9 +9,9 @@ namespace command {
     Test::Test(int argc, char **argv): Command(argc, argv) {
         longopts = new struct option [] {
             {"help", no_argument, nullptr, 'h'},
-            {"skipMatrixCheck ", optional_argument, nullptr, 'c'},
-            {"jacobiW ", optional_argument, nullptr, 'j'},
-            {"gaussW ", optional_argument, nullptr, 'g'}
+            {"skipMatrixCheck ", no_argument, nullptr, 'c'},
+            {"jacobiW ", required_argument, nullptr, 'j'},
+            {"gaussW ", required_argument, nullptr, 'g'}
         };
 
         ++argv;
@@ -66,7 +66,7 @@ namespace command {
         double gaussW = 1.0;
 
         while (true){
-            int opt = getopt_long (argc, argv, "hcwg:fF", longopts, nullptr);
+            int opt = getopt_long (argc, argv, "hc j:fF g:fF", longopts, nullptr);
 
             //end of parameter parsing
             if(opt == -1)
@@ -79,7 +79,7 @@ namespace command {
                 case 'c':
                     skipMatrixCheck = true;
                     break;
-                case 'w':
+                case 'j':
                     jacobiW = Command::getDoubleOption(optarg);
                     break;
                 case 'g':
@@ -89,11 +89,14 @@ namespace command {
 
         }
 
-
         try {
             test(skipMatrixCheck, gaussW, jacobiW);
         } catch (const NonSymmetricAndPositiveDefiniteException &ex) {
             std::cerr << "Error! The provided matrix is not symmetric and positive definite." << std::endl;
+        } catch (const WrongParameterValueException &ex) {
+            std::cerr << "Error! The passed parameter is invalid, one of the methods may not converge" << std::endl;
+        } catch (const NonSquareMatrixException &ex) {
+            std::cerr << "Error! The provided matrix is not square" << std::endl;
         }
     }
 }
