@@ -1,12 +1,17 @@
 #ifndef ITERATIVE_SOLVER_H
 #define ITERATIVE_SOLVER_H
 
+#include "IterativeSolverResult.h"
 #include "Solver.h"
 #include "updateStrategy/Strategy.h"
 #include <Eigen/Cholesky>
 #include "exceptions/NonSymmetricAndPositiveDefiniteException.h"
-#include "norm.h"
+#include "NormType.h"
 #include "exceptions/NonSquareMatrixException.h"
+#include "constants.h"
+#include <Spectra/GenEigsSolver.h>
+#include <Spectra/SymEigsSolver.h>
+#include <Spectra/MatOp/SparseGenMatProd.h>
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -62,6 +67,34 @@ private:
         }
     }
 
+    template <typename Solver>
+    T computeCondition(Solver &eigs, unsigned int n) {
+        eigs.init();
+        int nconv = eigs.compute(Spectra::SortRule::LargestMagn);
+        double max = eigs.eigenvalues()(0).real();
+        double min =  eigs.eigenvalues()(n - 3).real();
+
+        if (min <= ZERO_THRESHOLD) {
+            return 1e15;
+        }
+
+        return max / min;
+    }
+
+    T conditionNumber(const Eigen::SparseMatrix<T> &A) {
+        Spectra::SparseGenMatProd<T> op(A);
+        Spectra::GenEigsSolver<Spectra::SparseGenMatProd<T>> eigs(op, A.cols() - 2, A.cols());
+        return computeCondition(eigs, A.cols());
+    }
+
+
+    T conditionNumber(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
+        Spectra::DenseGenMatProd<T> op(A);
+        Spectra::GenEigsSolver<Spectra::DenseGenMatProd<T>> eigs(op, A.cols() - 2, A.cols());
+        return computeCondition(eigs, A.cols());
+    }
+
+
 public:
     IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN) : AbstractSolver<T, MatrixType>(),
                                                                                                                                         maxIter(maxIter),
@@ -82,16 +115,27 @@ public:
         return this->iterations;
     }
 
-    virtual Eigen::Matrix<T, Eigen::Dynamic, 1>
-
+    virtual SolverResults<T, MatrixType>*
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
         if (A.rows() != A.cols()) {
             throw NonSquareMatrixException();
         }
-        
+
+        T cond = -1; // TODO: improve performance
+
+        if (b.isZero(ZERO_THRESHOLD)) {
+            auto *solution = new Eigen::Matrix<T, Eigen::Dynamic, 1>(b.rows(), 1);
+            solution->setZero();
+            return new IterativeSolverResult<T, MatrixType>(solution, cond, updateStrategy, normType);
+        }
+
         if(!skipMatrixCheck) {
             checkSymmetricAndPositiveDefinite(A);
         }
+
+       
+
+        
 
         updateStrategy->init(A, b);
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
@@ -103,7 +147,9 @@ public:
         } while (iter < maxIter && !reachedTolerance(*currentResult, A, b, tol));
 
         this->iterations = iter;
-        return *currentResult;
+
+        SolverResults<T, MatrixType> *results = new IterativeSolverResult<T, MatrixType>(currentResult, cond, updateStrategy, normType);
+        return results;
     }
 
     std::string methodName() const {

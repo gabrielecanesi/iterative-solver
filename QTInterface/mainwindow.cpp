@@ -9,7 +9,7 @@
 #include <Eigen/Sparse>
 #include <thread>
 #include <QMovie>
-#include <solver/norm.h>
+#include <solver/NormType.h>
 
 #include <QMessageBox>
 

@@ -14,7 +14,7 @@
 #include <updateStrategy/JacobiUpdateStrategy.h>
 #include <util/Benchmark.h>
 #include <memory>
-#include <solver/norm.h>
+#include <solver/NormType.h>
 
 using namespace UpdateStrategy;
 

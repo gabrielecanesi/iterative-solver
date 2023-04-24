@@ -9,7 +9,7 @@
 #include "resultswindow.h"
 #include <Eigen/Sparse>
 #include <util/Benchmark.h>
-#include <solver/norm.h>
+#include <solver/NormType.h>
 
 typedef double precision;
 
