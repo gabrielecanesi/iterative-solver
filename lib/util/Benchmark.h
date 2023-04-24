@@ -126,6 +126,16 @@ public:
         return solver->tolerance();
     }
 
+    std::string toStdOutput() const {
+        std::stringstream stream;
+        std::cout << methodName() << std::endl;
+        std::cout << "\tTolerance: " << tolerance() << std::endl;
+        std::cout << "\tElapsed: " << elapsedMilliseconds() << std::endl;
+        std::cout << "\tIterations: " << neededIterations() << std::endl;
+        std::cout << "\tRelative error: " << relativeError() << std::endl << std::endl;
+        return stream.str();
+    }
+
 
     std::string toCSVString() const {
         std::stringstream stream;

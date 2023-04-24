@@ -1,0 +1,11 @@
+#ifndef ITERATIVE_CLIENT_FILENOTFOUNDEXCEPTION_H
+#define ITERATIVE_CLIENT_FILENOTFOUNDEXCEPTION_H
+
+#include <stdexcept>
+
+class FileNotFoundException : std::exception {
+
+};
+
+
+#endif //ITERATIVE_CLIENT_FILENOTFOUNDEXCEPTION_H

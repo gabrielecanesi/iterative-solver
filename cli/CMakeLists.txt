@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
@@ -21,7 +21,7 @@ endif()
 
 
 
-add_executable(iterative-client mainCLI.cpp)
+add_executable(iterative-client mainCLI.cpp command/Solve.cpp command/Test.cpp exceptions/FileNotFoundException.h)
 add_subdirectory(../lib ../build-lib)
 include_directories(../lib ${eigen_SOURCE_DIR})
 
