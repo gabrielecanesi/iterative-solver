@@ -28,6 +28,13 @@ namespace command {
             return std::stod(optarg);
         }
 
+        static std::string getStringOption(char* optarg) {
+            std::string numberToClear = std::string(optarg);
+            numberToClear.erase(std::remove(numberToClear.begin(), numberToClear.end(), '='), numberToClear.end());
+            numberToClear.erase(std::remove(numberToClear.begin(), numberToClear.end(), ' '), numberToClear.end());
+            return optarg;
+        }
+
     protected:
         int argc;
         char **argv;
