@@ -13,6 +13,8 @@ Per compilare con successo l'applicazione cli, è necessario eseguire i seguenti
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../cli
 make \end{lstlisting}
+
+\item Windows: il modo più veloce per compilare da Windows è quelllo di utilizzare il Windows Subsystem for Linux: in questo modo è possibile compilare esattamente come mostrato in precedenza.
 \end{itemize}
 
 
@@ -26,5 +28,8 @@ Al momento dell'esecuzione del comando CMake, automaticamente, viene importato i
 mkdir build-qt && cd build-qt
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=<installazione di Qt>/<versione>/<sistema> ../QTInterface
 make \end{lstlisting}
+In alternativa, è possibile da Qt Creator aprire il file \path{CMakeLists.txt} nella cartella \path{QTInterface} e, in basso a sinistra, cliccare sul bottone di esecuzione dopo avere selezionato come tipo di build "Release" al posto di "Debug".
+
+\item Windows: il modo più veloce per compilare da Windows è quello di aprire sempre Qt Creator ed effettuare la compilazione dall'interfaccia grafica, come spiegato in precedenza.
 \end{itemize}
-Il valore del prefix path dipende fortemente dalla propria installazione e dal proprio sistema operativo. In questo caso, viene generata l'applicazione chiamata \texttt{iterative-solver-ui} nella cartella \path{build}.
+Il valore del prefix path dipende fortemente dalla propria installazione e dal proprio sistema operativo. In questo caso, viene generata l'applicazione chiamata \path{iterative-solver-ui} nella cartella \path{build}.
