@@ -3,6 +3,7 @@
 
 #include <getopt.h>
 #include <iostream>
+#include <algorithm>
 
 namespace command {
 
