@@ -7,7 +7,7 @@ typedef double Precision;
 namespace command {
 
     Test::Test(int argc, char **argv): Command(argc, argv) {
-        longopts = new struct option [] {
+        longopts = new struct option [5] {
             {"help", no_argument, nullptr, 'h'},
             {"skipMatrixCheck ", no_argument, nullptr, 'c'},
             {"jacobiW ", required_argument, nullptr, 'j'},
