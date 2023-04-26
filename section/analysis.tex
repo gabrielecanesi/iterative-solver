@@ -23,15 +23,59 @@ Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utiliz
 %Immagine tolerance-relative_error, vem1, difference between the 4 methods
 %Immagine tolerance-relative_error, vem2, difference between the 4 methods
 
+
+\begin{figure}%
+	\centering
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/spa1.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/spa2.pdf} }}%
+	\qquad
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/vem1.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/vem2.pdf} }}%
+	\caption{Grafici tolleranza / tempi sulle varie matrici di benchmark}%
+\end{figure}
+
+\begin{figure}%
+	\centering
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Jacobi.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Conjugate Gradient.pdf} }}%
+	\qquad
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Gauss-Seidel.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Gradient.pdf} }}%
+	\caption{Grafici tolleranza / tempi rispetto i singoli metodi}%
+\end{figure}
+
+
+
 \paragraph{tolerance/elapsedTime}
 
 %Immagine tolerance-elapsedTime, spa1, difference between the 4 methods
 %Immagine tolerance-elapsedTime, spa2, difference between the 4 methods
 %Immagine tolerance-elapsedTime, vem1, difference between the 4 methods
 %Immagine tolerance-elapsedTime, vem2, difference between the 4 methods
-
 Dai grafici, si evince immediatamente che all'aumentare della tolleranza, il tempo di esecuzione di ogni algoritmo cala, ed è più che ragionevole dato che al calare della tolleranza, il criterio di arresto diventa più permissivo.
 Portando inevitabilmente, per tutti gli algoritmi, ad un numero inferiore di iterazione, conseguentemente ad un tempo di esecuzione minore ed una soluzione meno precisa.
+
+\begin{figure}%
+	\centering
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/spa1.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/spa2.pdf} }}%
+	\qquad
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/vem1.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/vem2.pdf} }}%
+	\caption{Grafici tolleranza / tempi sulle varie matrici di benchmark}%
+\end{figure}
+
+
+\begin{figure}%
+	\centering
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Jacobi.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Conjugate Gradient.pdf} }}%
+	\qquad
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Gauss-Seidel.pdf} }}%
+	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Gradient.pdf} }}%
+	\caption{Grafici tolleranza / tempi rispetto i singoli metodi}%
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
