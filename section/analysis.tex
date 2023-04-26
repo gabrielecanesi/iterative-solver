@@ -8,21 +8,20 @@ Per verificare che i metodi si comportassero in maniera corretta, abbiamo provat
 
 \subsection{Runtime data}
 
-Le seguenti analisi nascono dai dati ricavati dall'esecuzione dei quattro metodi iterativi, i parametri considerati sono: \textit{tolleranza utilizzata} durante la fase di risoluzione, il \textit{tempo di esecuzione espresso in millisecondi}, il \textit{numero di iterazioni} effettuate per arrivare all'output, l'\textit{errore relativo} della soluzione ottenuta in relazione a quella di partenza e il \textit{nome della matrice risolta}. Il fine è quello di trarre delle conclusioni concrete sui quattro metodi iterativi, sulla loro funzionalità e performance.
+Le seguenti analisi nascono dai dati ricavati dall'esecuzione dei quattro metodi iterativi, i parametri considerati sono: \textit{tolleranza utilizzata} durante la fase di risoluzione, il \textit{tempo di esecuzione espresso in millisecondi}, il \textit{numero di iterazioni} effettuate per arrivare all'output, l'\textit{errore relativo} della soluzione ottenuta in relazione a quella di partenza e il \textit{nome della matrice risolta}. Il fine è quello di trarre delle conclusioni concrete sui quattro metodi iterativi, in particolare sulla loro funzionalità e performance.
 (? e trarne una conclusione anche sui migliori parametri da inserire per ogni metodo?).
 
 
-\subsubsection{I metodi iterativi a confronto}
+\subsubsection{Metodi iterativi a confronto}
 
 \paragraph{tolerance/relativeError}
 Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utilizzata in fase di risoluzione dei quattro metodi a paragone, l'obiettivo è stabilire in che modo, al variare della tolleranza, il valore dell'errore relativo dei metodi potrebbe differire.
 
+\paragraph{Difference between the methods}
 %Immagine tolerance-relative_error, spa1, difference between the 4 methods
 %Immagine tolerance-relative_error, spa2, difference between the 4 methods
 %Immagine tolerance-relative_error, vem1, difference between the 4 methods
 %Immagine tolerance-relative_error, vem2, difference between the 4 methods
-
-
 
 \paragraph{tolerance/elapsedTime}
 
@@ -31,6 +30,8 @@ Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utiliz
 %Immagine tolerance-elapsedTime, vem1, difference between the 4 methods
 %Immagine tolerance-elapsedTime, vem2, difference between the 4 methods
 
+Dai grafici, si evince immediatamente che all'aumentare della tolleranza, il tempo di esecuzione di ogni algoritmo cala, ed è più che ragionevole dato che al calare della tolleranza, il criterio di arresto diventa più permissivo.
+Portando inevitabilmente, per tutti gli algoritmi, ad un numero inferiore di iterazione, conseguentemente ad un tempo di esecuzione minore ed una soluzione meno precisa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
