@@ -14,8 +14,8 @@ Le seguenti analisi nascono dai dati ricavati dall'esecuzione dei quattro metodi
 
 \subsubsection{Metodi iterativi a confronto}
 
-\paragraph{tolerance/relativeError}
-Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utilizzata in fase di risoluzione dei quattro metodi a paragone, l'obiettivo è stabilire in che modo, al variare della tolleranza, il valore dell'errore relativo dei metodi potrebbe differire.
+\paragraph{Tolleranza vs errore relativo}
+Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utilizzata in fase di risoluzione dei quattro metodi a paragone; l'obiettivo è stabilire in che modo, al variare della tolleranza, il valore dell'errore relativo dei metodi potrebbe differire. In Figura \ref{fig:tolerrmat} e \ref{fig:tolerrmet} sono presenti i grafici relativi alla relazione tra tolleranza ed errore, raggruppati, rispettivamente, per matrici e per metodi.
 
 
 
@@ -26,7 +26,8 @@ Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utiliz
 	\qquad
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/vem1.pdf} }}%
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 methods/vem2.pdf} }}%
-	\caption{Grafici tolleranza / tempi sulle varie matrici di benchmark}%
+	\caption{Grafici tolleranza / errore relativo sulle varie matrici di benchmark}%
+	\label{fig:tolerrmat}
 \end{figure}
 
 
@@ -37,21 +38,18 @@ Abbiamo pensato di mettere in relazione l'errore relativo e la tolleranza utiliz
 	\qquad
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Gauss-Seidel.pdf} }}%
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Relative error/Difference between the 4 matrices on the same method/Gradient.pdf} }}%
-	\caption{Grafici tolleranza / tempi rispetto i singoli metodi}%
+	\caption{Grafici tolleranza / errore relativo rispetto i singoli metodi}%
+	\label{fig:tolerrmet}
 \end{figure}
-
-
-\paragraph{Difference between the methods}
 %Immagine tolerance-relative_error, spa1, difference between the 4 methods
 %Immagine tolerance-relative_error, spa2, difference between the 4 methods
 %Immagine tolerance-relative_error, vem1, difference between the 4 methods
 %Immagine tolerance-relative_error, vem2, difference between the 4 methods
 
+
 Osservando i grafici, l'incremento dell'errore relativo è direttamente proporzionale alla crescita della tolleranza utilizzata durante l'esecuzione dei quattro metodi. Il risultato è ragionevole, così come indicato al capitolo \ref{tol/time, diff methods}, all'aumentare della tolleranza il criterio di arresto sarà meno restrittivo, portando ad una soluzione meno accurata, ergo ad un aumento dell'errore relativo.
 
-Conjugate gradient migliore per vem1 e vem2.
-
-\paragraph{tolerance/elapsedTime}\label{tol/time, diff methods}
+\paragraph{Tolleranza vs tempo trascorso}\label{tol/time, diff methods}
 
 
 \begin{figure}%
@@ -62,6 +60,7 @@ Conjugate gradient migliore per vem1 e vem2.
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/vem1.pdf} }}%
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 methods/vem2.pdf} }}%
 	\caption{Grafici tolleranza / tempi sulle varie matrici di benchmark}%
+	\label{fig:toltimemat}
 \end{figure}
 
 \begin{figure}%
@@ -72,35 +71,20 @@ Conjugate gradient migliore per vem1 e vem2.
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Gauss-Seidel.pdf} }}%
 	\subfloat{{\includegraphics[width=0.40\textwidth]{figures/Tolerance vs Elapsed time/Difference between the 4 matrices on the same method/Gradient.pdf} }}%
 	\caption{Grafici tolleranza / tempi rispetto i singoli metodi}%
+	\label{fig:toltimemet}
 \end{figure}
 %Immagine tolerance-elapsedTime, spa1, difference between the 4 methods
 %Immagine tolerance-elapsedTime, spa2, difference between the 4 methods
 
-Verificare la percentuale di sparsità, Gauss Seidel è l'algoritmo che per le matrici spa, surclassa ogni altro metodo.
+Nelle Figure \ref{fig:toltimemat} e \ref{fig:toltimemet} sono rappresentati i grafici relativi all'andamento del tempo rispetto alla tolleranza, raggruppati rispettivamente per matrice e per metodo.
+Gauss Seidel è l'algoritmo che per le matrici relativamente dense, surclassa ogni altro metodo. Quando si passa a matrici estremamente sparse, come \path{vem1} e \path{vem2}, l'algoritmo che si comporta meglio sembra essere, invece, il gradiente coniugato.
 
-%Immagine tolerance-elapsedTime, vem1, difference between the 4 methods
-%Immagine tolerance-elapsedTime, vem2, difference between the 4 methods
-
-Verificare la percentuale di sparsità, Conjugate gradient è l'algoritmo che per le matrici spa, surclassa ogni altro metodo.
-
-Dai grafici, si evince immediatamente che all'aumentare della tolleranza, il tempo di esecuzione di ogni algoritmo cala, ed è più che ragionevole dato che al calare della tolleranza, il criterio di arresto diventa più permissivo.
-Portando inevitabilmente, per tutti gli algoritmi, ad un numero inferiore di iterazione, conseguentemente ad un tempo di esecuzione minore ed una soluzione meno precisa.
+Dai grafici si evince immediatamente che, all'aumentare della tolleranza, il tempo di esecuzione di ogni algoritmo tende a calare. Questa tendenza è più che ragionevole dato che, al calare della tolleranza, il criterio di arresto diventa più permissivo.
+Portando inevitabilmente, per tutti gli algoritmi, ad un numero inferiore di iterazioni, conseguentemente ad un tempo di esecuzione minore ed una soluzione meno precisa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsubsection{Input a confronto}
-Durante lo svolgimento dell'analisi, ci siamo resi conto che sarebbe stato interessante osservare la differenza della risoluzioni delle quattro matrici, al fine di stabilire in quali casi i metodi iterativi sono migliori con determinate strutture matriciali in input.
-
-\paragraph{tolerance/relativeError}
-
-%Immagine tolerance-relative_error, spa1, difference between the 4 matrixes on the same method
-%Immagine tolerance-relative_error, spa2, difference between the 4 matrixes on the same method
-%Immagine tolerance-relative_error, vem1, difference between the 4 matrixes on the same method
-%Immagine tolerance-relative_error, vem2, difference between the 4 matrixes on the same method
-
-\paragraph{tolerance/elapsedTime}
 
 %Immagine tolerance-elapsedTime, spa1, difference between the 4 matrixes on the same method
 %Immagine tolerance-elapsedTime, spa2, difference between the 4 matrixes on the same method
