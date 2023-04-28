@@ -13,6 +13,16 @@ Per compilare con successo l'applicazione cli, è necessario eseguire i seguenti
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../cli
 make \end{lstlisting}
+Questi comandi generano l'eseguibile \path{iterative-client}, che può essere eseguito in due modi diversi. Il primo è il comando \path{solve}:
+\begin{lstlisting}	
+./iterative-client solve <percorso_matrice>
+\end{lstlisting}
+dopo il percorso della matrice, è possibile aggiungere le opzioni mostrate alla Sezione \ref{sec:cli}; in alternativa, invece, è disponibile il comando \path{test}:
+\begin{lstlisting}
+./iterative-client test
+\end{lstlisting}
+Questo si comporta come \path{solve}, ma esegue i metodi su tutte le matrici fornite insieme alla consegna del progetto, che devono trovarsi in \path{../Matrices/}. Anche questo comando accetta le stesse opzioni di \path{solve}.
+
 
 \item Windows: il modo più veloce per compilare da Windows è quelllo di utilizzare il Windows Subsystem for Linux: in questo modo è possibile compilare esattamente come mostrato in precedenza.
 \end{itemize} 
@@ -21,7 +31,7 @@ make \end{lstlisting}
 Al momento dell'esecuzione del comando CMake, automaticamente, viene importato il progetto della libreria e viene scaricato Eigen, per poter effettuare la compilazione finale. L'output finale generato è l'applicazione chiamata \texttt{iterative-solver} nella cartella \path{build}.
 
 \subsection{Qt}
-È necessario avere installato prima della compilazione il pacchetto aggiuntivo di Qt \texttt{Charts}.
+È necessario avere installato, prima della compilazione, il pacchetto aggiuntivo di Qt \texttt{Charts}.
 \begin{itemize}
 	\item Linux/MacOS: 
 	\begin{lstlisting}[language=Bash]
