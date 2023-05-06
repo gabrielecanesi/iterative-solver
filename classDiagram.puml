@@ -1,0 +1,262 @@
+@startuml
+/' Objects '/
+
+abstract class AbstractSolver <template<typename T, typename MatrixType>> {
+	+~AbstractSolver()
+	+{abstract} solve(MatrixType& A, &b) : SolverResults<T , MatrixType>*
+}
+
+
+class BackwardSubstitutionSolver <template<typename T, typename MatrixType>> {
+	-solveSpecific(&A, &b) : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+	+solveSpecific(&A, &b) : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+	+solve(MatrixType& A, &b) : SolverResults<T , MatrixType>*
+}
+
+
+class IterativeBenchmark <template<typename Precision, typename MatrixType>> {
+	+IterativeBenchmark()
+	+IterativeBenchmark(const IterativeBenchmark& other)
+	+IterativeBenchmark(std::string matrixName)
+	+~IterativeBenchmark()
+	+getBenchmarkResult(* results) : BenchmarkResult<Precision , MatrixType>
+	+run(&A, &b, maxIter, tolerance, &strategy, const &x, normType) : BenchmarkResult<Precision , MatrixType>
+	+run(&A, &b, maxIter, tolerance, &strategy, const &x, skipMatrixCheck, normType) : BenchmarkResult<Precision , MatrixType>
+	-solution : Eigen::Matrix<Precision, Eigen::Dynamic, 1>
+	-solver : IterativeSolver<Precision, MatrixType>*
+	-M_relativeError : Precision
+	+relativeError() : Precision {query}
+	+tolerance() : Precision {query}
+	-timer : Timer
+	+elapsedMilliseconds() : double {query}
+	+{static} CsvHeader() : std::string
+	+matrixName : std::string
+	+methodName() : std::string {query}
+	+toCSVString() : std::string {query}
+	+toStdOutput() : std::string {query}
+	+neededIterations() : unsigned int {query}
+}
+
+
+class IterativeSolver <template<typename T, typename MatrixType>> {
+	+IterativeSolver(maxIter, *updateStrategy, tol, bool skipMatrixCheck,normType)
+	+IterativeSolver(const IterativeSolver<T, MatrixType>& other)
+	-normType : NormType
+	+solve(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : SolverResults<T , MatrixType>*
+	-tol : T
+	+tolerance() : T {query}
+	-updateStrategy : UpdateStrategy::Strategy<T, MatrixType>*
+	-reachedTolerance(&currentResult, const &A,&b, tol) : bool {query}
+	-skipMatrixCheck : bool
+	+methodName() : std::string {query}
+	-iterations : unsigned int
+	-maxIter : unsigned int
+	+neededIterations() : unsigned int {query}
+}
+
+
+class IterativeSolverResult <template<typename Precision, typename MatrixType>> {
+	+IterativeSolverResult(const *solution, conditionNumber, *usedStrategy, normType)
+	-M_normType : NormType
+	+normType() : NormType {query}
+	+usedStrategy() : UpdateStrategy::Strategy<Precision , MatrixType>* {query}
+	-M_usedStrategy : UpdateStrategy::Strategy<Precision, MatrixType>*
+	-M_neededIterations : unsigned int
+	+neededIterations() : unsigned int {query}
+}
+
+
+class NonSquareMatrixException {
+}
+
+
+class NonSymmetricAndPositiveDefiniteException {
+}
+
+
+class SolverResults <template<typename Precision, typename MatrixType>> {
+	+SolverResults(const* solution, conditionNumber)
+	+solution() : Eigen::Matrix<Precision , Eigen::Dynamic , 1>* {query}
+	#M_conditionNumber : Precision
+	+conditionNumber() : Precision {query}
+	#M_solution : const Eigen::Matrix<Precision, Eigen::Dynamic, 1>*
+}
+
+
+class Timer {
+	+elapsedMilliseconds() : double {query}
+	-begin : std::chrono::steady_clock::time_point
+	-end : std::chrono::steady_clock::time_point
+	+tic() : void
+	+toc() : void
+}
+
+
+class WrongParameterValueException {
+	+WrongParameterValueException(minValue, maxValue, minIncluded, maxIncluded)
+	-M_maxIncluded : bool
+	-M_minIncluded : bool
+	+maxIncluded() : bool {query}
+	+minIncluded() : bool {query}
+	-M_maxValue : double
+	-M_minValue : double
+	+maxValue() : double {query}
+	+minValue() : double {query}
+}
+
+
+enum NormType {
+	EUCLIDEAN
+	INFTY
+	MANHATTAN
+}
+
+
+class BenchmarkResult <template<typename Precision, typename MatrixType>> {
+	+BenchmarkResult()
+	+BenchmarkResult(elapsedMilliseconds, *results, relativeError)
+	+operator+(const BenchmarkResult& other) : BenchmarkResult&
+	+results : IterativeSolverResult<Precision, MatrixType>*
+	+relativeErrorMean : Precision
+	+ElapsedMillisecondsVariance : double
+	-allValues : std::vector<BenchmarkResult<Precision, MatrixType>>
+	+elapsedMillisecondsMean : unsigned int
+	+neededIterationsMean : unsigned int
+	-update_values() : void
+}
+
+
+namespace UpdateStrategy {
+	class ConjugateGradientUpdateStrategy <template<typename T, typename MatrixType>> {
+		+ConjugateGradientUpdateStrategy()
+		+ConjugateGradientUpdateStrategy(const& strategy)
+		+~ConjugateGradientUpdateStrategy()
+		-computeResidual() : Eigen::Matrix<T , Eigen::Dynamic , 1> {query}
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-d : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		-residual : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-computeAlpha(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T {query}
+		-computeBeta(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T
+		-name() : std::string {query}
+		-init(MatrixType& A, &b) : void
+		-updateD(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : void
+	}
+
+	class GaussSeidelUpdateStrategy <template<typename T, typename MatrixType>> {
+		+GaussSeidelUpdateStrategy(T w)
+		+GaussSeidelUpdateStrategy()
+		+GaussSeidelUpdateStrategy(const& other)
+		-compute_residual() : Eigen::Matrix<T , Eigen::Dynamic , 1> {query}
+		+update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-P : MatrixType*
+		+clone() : Strategy<T , MatrixType>*
+		-w : T
+		+name() : std::string {query}
+		+init(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : void
+	}
+
+	class GradientUpdateStrategy <template<typename T, typename MatrixType>> {
+		+GradientUpdateStrategy()
+		+GradientUpdateStrategy(const GradientUpdateStrategy& other)
+		-computeResidual() : Eigen::Matrix<T , Eigen::Dynamic , 1> {query}
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-computeAlpha(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T {query}
+		-name() : std::string {query}
+	}
+
+	class JacobiUpdateStrategy <template<typename T, typename MatrixType>> {
+		+JacobiUpdateStrategy()
+		+JacobiUpdateStrategy(T w)
+		+JacobiUpdateStrategy(const &other)
+		-PInverse : Eigen::DiagonalMatrix<T, Eigen::Dynamic>*
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-w : T
+		-name() : std::string {query}
+		+init(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : void
+	}
+
+	abstract class Strategy <template<typename T, typename MatrixType>> {
+		+Strategy()
+		+Strategy(const Strategy& other)
+		+~Strategy()
+		+{abstract} update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		#result : Eigen::Matrix<T, Eigen::Dynamic, 1>
+		#b : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		#A : MatrixType*
+		+{abstract} clone() : Strategy<T , MatrixType>*
+		+{abstract} name() : std::string {query}
+		+init(MatrixType& A, &b) : void
+	}
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+BackwardSubstitutionSolver -|> .AbstractSolver
+
+
+.AbstractSolver <|--- .IterativeSolver
+
+
+.SolverResults <|--- .IterativeSolverResult
+
+
+UpdateStrategy.Strategy <|--- UpdateStrategy.ConjugateGradientUpdateStrategy
+
+
+UpdateStrategy.Strategy <|-- UpdateStrategy.GaussSeidelUpdateStrategy
+
+
+UpdateStrategy.Strategy <|-- UpdateStrategy.GradientUpdateStrategy
+
+
+UpdateStrategy.Strategy <|--- UpdateStrategy.JacobiUpdateStrategy
+
+
+
+
+
+/' Aggregation relationships '/
+
+.BenchmarkResult *-- .BenchmarkResult
+
+
+.BenchmarkResult *-- .IterativeSolverResult
+
+
+.IterativeBenchmark *-- .IterativeSolver
+
+
+.IterativeBenchmark *-- .Timer
+
+
+.IterativeSolver *-- .NormType
+
+
+.IterativeSolver *-- UpdateStrategy.Strategy
+
+
+.IterativeSolverResult *-- .NormType
+
+
+.IterativeSolverResult *-- UpdateStrategy.Strategy
+
+
+together {
+  class NonSymmetricAndPositiveDefiniteException
+  class NonSquareMatrixException
+  class WrongParameterValueException
+}
+
+NormType -[hidden]- NonSquareMatrixException
+NormType -[hidden]--- NonSymmetricAndPositiveDefiniteException
+NormType -[hidden]-- WrongParameterValueException
+
+/' Nested objects '/
+@enduml
