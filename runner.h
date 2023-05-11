@@ -30,7 +30,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
                                                                                         NormType normType = NormType::EUCLIDEAN) {
 
     Eigen::SparseMatrix<Precision> A = MatrixReader::readSparseFromFile<Precision>(filename);
-    std::cout<<conditioningCheck::powerMethod<Precision>(A, 1e-6, 100000);
+    
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> x(A.rows(), 1);
     x.setOnes();
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> b = A * x;

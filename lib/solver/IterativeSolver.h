@@ -10,6 +10,7 @@
 #include "exceptions/NonSquareMatrixException.h"
 #include "constants.h"
 #include "MatrixUtil.h"
+#include "util/conditioningCheckMethods.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -21,6 +22,7 @@ private:
     T tol;
     bool skipMatrixCheck = false;
     NormType normType;
+    bool skipCondition;
 
     bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         double abNorm;
@@ -47,12 +49,14 @@ private:
 
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN) : AbstractSolver<T, MatrixType>(),
+    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN, bool skipCondition = false) : AbstractSolver<T, MatrixType>(),
                                                                                                                                         maxIter(maxIter),
                                                                                                                                         updateStrategy(updateStrategy),
                                                                                                                                         tol(tol),
                                                                                                                                         skipMatrixCheck(skipMatrixCheck),
-                                                                                                                                        normType(normType) {}
+                                                                                                                                        normType(normType),
+                                                                                                                                        skipCondition(skipCondition){}
+                                                                                                                                        
     IterativeSolver(const IterativeSolver<T, MatrixType> &other) : updateStrategy(nullptr) {
         if (other.updateStrategy != nullptr) {
             this->updateStrategy = other.updateStrategy->clone();
@@ -73,7 +77,14 @@ public:
             throw NonSquareMatrixException();
         }
 
-        T cond = -1; // TODO: improve performance
+        T cond = -1;
+        
+        if (!skipCondition) {
+            cond = conditioningCheck::checkConditioning<T, MatrixType>(A, 1e-6, 1000);
+            std::cout << "Condition number: " << cond << std::endl;
+        }
+
+        
 
         if (b.isZero(ZERO_THRESHOLD)) {
             auto *solution = new Eigen::Matrix<T, Eigen::Dynamic, 1>(b.rows(), 1);

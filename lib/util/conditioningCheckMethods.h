@@ -1,10 +1,19 @@
 #ifndef POWER_METHOD
 #define POWER_METHOD
 
+#include <solver/IterativeSolver.h>
+#include <updateStrategy/GradientUpdateStrategy.h>
 #include <Eigen/Sparse>
 #include <iostream>
+#include <solver/NormType.h>
+
+template<typename T, typename MatrixType>
+class IterativeSolver;
 
 namespace conditioningCheck{
+	
+	template<typename T, typename MatrixType> 
+	T checkConditioning(MatrixType &A, double tol, unsigned int maxIter);
 
 	template<typename T>
 	bool arrestCriterion(Eigen::Matrix<T, Eigen::Dynamic, 1> q, Eigen::Matrix<T, Eigen::Dynamic, 1> q_old, double tol){
@@ -12,9 +21,9 @@ namespace conditioningCheck{
 		return  (q - q_old).norm() < tol;
 	}
 
-	template<typename T>
-	T powerMethod(Eigen::SparseMatrix<T> A, double tol, unsigned int maxIter){
-		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old, q, z;
+	template<typename T, typename MatrixType>
+	T powerMethod(MatrixType &A, double tol, unsigned int maxIter){
+		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old(A.rows(), 1), q(A.rows(), 1), z(A.rows(), 1);
 		T v;
 		q.setOnes();
 		q.normalized();
@@ -23,7 +32,6 @@ namespace conditioningCheck{
 			q_old = q;
 			z = A * q_old;
 			q = z / z.norm();
-			v = q.transpose() * A * q;
 			
 			maxIter--;
 
@@ -32,54 +40,48 @@ namespace conditioningCheck{
 			}
 		}while(arrestCriterion<T>(q, q_old, tol));
 	
-		return v;
+		return q.transpose() * A * q;
 	}
 
 
-	template<typename T>
-	T powerMethodInverse(Eigen::SparseMatrix<T> A, double tol, unsigned int maxIter){
-		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old, q, z;
+	template<typename T, typename MatrixType>
+	T powerMethodInverse(MatrixType &A, double tol, unsigned int maxIter){
+		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old(A.rows(), 1), q(A.rows(), 1), z(A.rows(), 1);
 		T v;
 		q.setOnes();
 		q.normalized();
-	
+		
+		UpdateStrategy::GradientUpdateStrategy<T, MatrixType> strategy;
+		IterativeSolver solver(100, &strategy, 1e-3, true, NormType::EUCLIDEAN, true);
+
 		do {
 			q_old = q;
-			//A * z = q;
+			z = *solver.solve(A, q)->solution();
 			q = z / z.norm();
-			v = q.transpose() * A * q;
-			
+
 			maxIter--;
 
 			if (maxIter == 0){
 				std::cerr << "Warning: the power inverse method does not converge" << std::endl;
 			}
-		}while(arrestCriterion<T>(q, q_old, tol));	
+		} while(arrestCriterion<T>(q, q_old, tol));	
 
-		return v;
+		Eigen::Matrix<T, Eigen::Dynamic, 1> lambdaV = *solver.solve(A, q)->solution();
+		
+		unsigned long i = 0;
+		while (q[i++] == 0) {}
+
+		return lambdaV(i) / q(i);
 	}
 
 
-	template<typename T> 
-	T checkConditioning(Eigen::SparseMatrix<T> A, double tol, unsigned int maxIter){
-		T maxA = powerMethod(A, tol, maxIter);
-		T minA = powerMethodInverse(A, tol, maxIter);
+	template<typename T, typename MatrixType> 
+	T checkConditioning(MatrixType &A, double tol, unsigned int maxIter){
+		T maxA = powerMethod<T, MatrixType>(A, tol, maxIter);
+		T minA = powerMethodInverse<T, MatrixType>(A, tol, maxIter);
 
 		return abs(maxA)/abs(minA);
 	}
-
-	/*
-	template<typename T>
-	Eigen::Matrix<T, Eigen::Dynamic, 1> randomNormalizedVector(unsigned int n){
-
-		Eigen::Matrix<T, Eigen::Dynamic, 1> v(n);
-	    std::default_random_engine generator;
-	    std::normal_distribution<T> distribution(0.0, 1.0);
-	    for (int i = 0; i < n; i++) {
-	        v(i) = distribution(generator);
-	    }
-	    return v.normalized();
-	}*/
 
 }
 

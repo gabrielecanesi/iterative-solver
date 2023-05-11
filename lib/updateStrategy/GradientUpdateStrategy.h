@@ -1,7 +1,7 @@
 #ifndef GRADIENT_UPDATE_STRATEGY_H
 #define GRADIENT_UPDATE_STRATEGY_H
 
-#include "solver/IterativeSolver.h"
+#include <updateStrategy/Strategy.h>
 
 namespace UpdateStrategy {
 
@@ -11,8 +11,6 @@ namespace UpdateStrategy {
     public:
         GradientUpdateStrategy() : Strategy<T, MatrixType>() {}
         GradientUpdateStrategy(const GradientUpdateStrategy& other) : Strategy<T, MatrixType>(other) {}
-
-        friend class IterativeSolver<T, MatrixType>;
 
     private:
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {
