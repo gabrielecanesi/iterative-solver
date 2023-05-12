@@ -1,14 +1,17 @@
 #ifndef POWER_METHOD_H
 #define POWER_METHOD_H
 
+#include <updateStrategy/ConjugateGradientUpdateStrategy.h>
 #include <solver/IterativeSolver.h>
-#include <updateStrategy/GradientUpdateStrategy.h>
 #include <Eigen/Dense>
 #include <iostream>
 
 
 template<typename T, typename MatrixType>
 class IterativeSolver;
+
+
+
 
 template<typename T>
 	bool arrestCriterion(Eigen::Matrix<T, Eigen::Dynamic, 1> q, Eigen::Matrix<T, Eigen::Dynamic, 1> q_old, double tol){
@@ -39,6 +42,7 @@ template<typename T>
 	}
 
 
+
 	template<typename T, typename MatrixType>
 	T powerMethodInverse(MatrixType &A, double tol, unsigned int maxIter){
 		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old(A.rows(), 1), q(A.rows(), 1), z(A.rows(), 1);
@@ -46,7 +50,7 @@ template<typename T>
 		q.setOnes();
 		q.normalize();
 		
-		UpdateStrategy::GradientUpdateStrategy<T, MatrixType> strategy;
+		UpdateStrategy::ConjugateGradientUpdateStrategy<T, MatrixType> strategy;
 		IterativeSolver solver(100, &strategy, 1e-3, true, NormType::EUCLIDEAN, true);
 
 		do {

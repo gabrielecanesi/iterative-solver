@@ -77,7 +77,7 @@ void MainWindow::on_finishExecution() {
     resultsDialog->buildTable<precision, Eigen::SparseMatrix<precision>>(results);
     resultsDialog->show();
     resultsDialog->buildCharts();
-    if (1 / results[0].conditionNumber() <= 1e-13){
+    if (1 / results[0].conditionNumber() <= 1e-6){
         errorDialog->critical(this, "Warning!!!", "The condition number of this matrix is very high! Results may be imprecise.");
     }
 }

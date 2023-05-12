@@ -49,6 +49,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
         results.push_back(benchmark);
     }
 
+    std::cout << results[0].conditionNumber() << std::endl;
     return results;
 }
 

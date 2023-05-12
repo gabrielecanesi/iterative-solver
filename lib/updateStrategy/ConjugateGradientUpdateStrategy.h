@@ -1,7 +1,7 @@
 #ifndef CONJUGATE_GRADIENT_UPDATE_STRATEGY_H
 #define CONJUGATE_GRADIENT_UPDATE_STRATEGY_H
 
-#include "solver/IterativeSolver.h"
+#include <updateStrategy/Strategy.h>
 
 namespace UpdateStrategy {
 
@@ -26,7 +26,6 @@ namespace UpdateStrategy {
             this->residual = new Eigen::Matrix<T, Eigen::Dynamic, 1>(*strategy.d);
         }
 
-        friend class IterativeSolver<T, MatrixType>;
 
     private:
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {

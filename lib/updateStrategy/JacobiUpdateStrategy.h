@@ -1,7 +1,8 @@
 #ifndef JACOBI_UPDATE_STRATEGY_H
 #define JACOBI_UPDATE_STRATEGY_H
 
-#include "solver/IterativeSolver.h"
+#include <updateStrategy/Strategy.h>
+#include <exceptions/WrongParameterValueException.h>
 
 namespace UpdateStrategy {
 
@@ -26,8 +27,6 @@ namespace UpdateStrategy {
             PInverse = new Eigen::DiagonalMatrix<T, Eigen::Dynamic>(this->A->diagonal());
             *PInverse = PInverse->inverse() * w;
         }
-
-        friend class IterativeSolver<T, MatrixType>;
 
     private:
         Eigen::DiagonalMatrix<T, Eigen::Dynamic> *PInverse;
