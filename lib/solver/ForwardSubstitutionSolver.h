@@ -1,10 +1,10 @@
-#ifndef ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
-#define ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
+#ifndef ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
+#define ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
 
 #include "./Solver.h"
 
 template<typename T, typename MatrixType>
-class BackwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
+class ForwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
 
 public:
     SolverResults<T, MatrixType>* solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
@@ -12,16 +12,18 @@ public:
         return new SolverResults<T, MatrixType>(solution, 0);
     }
 
+private:
+
     Eigen::Matrix<T, Eigen::Dynamic, 1>* solveSpecific(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
         
         const int n = b.rows();
         Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult = new Eigen::Matrix<T, Eigen::Dynamic, 1>(n, 1);
 
-        (*currentResult)(n - 1, 0) = b(n - 1) / A.coeff(n - 1, n - 1);
+        (*currentResult)(0, 0) = b(0) / A.coeff(0, 0);
 
-        for(int i = n - 1; i >= 0; --i) {
+        for(int i = 1; i < n; ++i) {
             T summation = 0;
-            for(int j = i + 1; j < n; ++j)
+            for(int j = 0; j < i; ++j)
                 summation += A.coeff(i, j) * (*currentResult).coeff(j);
 
             (*currentResult)(i, 0) = (b.coeff(i) - summation) / A.coeff(i, i);
@@ -30,7 +32,6 @@ public:
         return currentResult;
     }
 
-private:
     Eigen::Matrix<T, Eigen::Dynamic, 1>* solveSpecific(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
 
         const int n = b.rows();
@@ -64,4 +65,4 @@ private:
 
 };
 
-#endif //ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
+#endif //ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
