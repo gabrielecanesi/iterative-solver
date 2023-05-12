@@ -10,7 +10,6 @@
 #include "exceptions/NonSquareMatrixException.h"
 #include "constants.h"
 #include "MatrixUtil.h"
-#include "util/conditioningCheckMethods.h"
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {
@@ -80,7 +79,7 @@ public:
         T cond = -1;
         
         if (!skipCondition) {
-            cond = conditioningCheck::checkConditioning<T, MatrixType>(A, 1e-6, 1000);
+            cond = MatrixUtil::conditionNumber<T, MatrixType>(A, 1e-6, 1000);
             std::cout << "Condition number: " << cond << std::endl;
         }
 

@@ -4,9 +4,7 @@
 
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
-#include <Spectra/GenEigsSolver.h>
-#include <Spectra/SymEigsSolver.h>
-#include <Spectra/MatOp/SparseGenMatProd.h>
+#include <util/PowerMethod.h>
 
 namespace MatrixUtil {
 
@@ -32,33 +30,13 @@ namespace MatrixUtil {
         }
     }
 
-    template <typename Solver, typename T>
-    T computeCondition(Solver &eigs, unsigned int n) {
-        eigs.init();
-        int nconv = eigs.compute(Spectra::SortRule::LargestMagn);
-        double max = eigs.eigenvalues()(0).real();
-        double min =  eigs.eigenvalues()(n - 3).real();
+   template<typename T, typename MatrixType> 
+	T conditionNumber(MatrixType &A, double tol, unsigned int maxIter){
+		T maxA = powerMethod<T, MatrixType>(A, tol, maxIter);
+		T minA = powerMethodInverse<T, MatrixType>(A, tol, maxIter);
 
-        if (min <= ZERO_THRESHOLD) {
-            return 1e15;
-        }
-
-        return max / min;
-    }
-
-    template <typename T>
-    T conditionNumber(const Eigen::SparseMatrix<T> &A) {
-        Spectra::SparseGenMatProd<T> op(A);
-        Spectra::GenEigsSolver<Spectra::SparseGenMatProd<T>> eigs(op, A.cols() - 2, A.cols());
-        return computeCondition(eigs, A.cols());
-    }
-
-    template <typename T>
-    T conditionNumber(const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A) {
-        Spectra::DenseGenMatProd<T> op(A);
-        Spectra::GenEigsSolver<Spectra::DenseGenMatProd<T>> eigs(op, A.cols() - 2, A.cols());
-        return computeCondition(eigs, A.cols());
-    }
+		return abs(maxA)/abs(minA);
+	}
 }
 
 #endif

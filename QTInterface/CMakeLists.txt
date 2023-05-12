@@ -27,19 +27,8 @@ if(NOT eigen_POPULATED)
   FetchContent_Populate(Eigen)
 endif()
 
-FetchContent_Declare(spectra
- GIT_REPOSITORY https://github.com/yixuan/spectra.git
- GIT_TAG        v1.0.1
-)
 
-FetchContent_GetProperties(spectra)
-
-if(NOT spectra_POPULATED)
-  FetchContent_Populate(spectra)
-endif()
-
-
-include_directories(${eigen_SOURCE_DIR} ${spectra_SOURCE_DIR}/include)
+include_directories(${eigen_SOURCE_DIR})
 
 set(PROJECT_SOURCES
         main.cpp

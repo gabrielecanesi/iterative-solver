@@ -1,21 +1,16 @@
-#ifndef POWER_METHOD
-#define POWER_METHOD
+#ifndef POWER_METHOD_H
+#define POWER_METHOD_H
 
 #include <solver/IterativeSolver.h>
 #include <updateStrategy/GradientUpdateStrategy.h>
-#include <Eigen/Sparse>
+#include <Eigen/Dense>
 #include <iostream>
-#include <solver/NormType.h>
+
 
 template<typename T, typename MatrixType>
 class IterativeSolver;
 
-namespace conditioningCheck{
-	
-	template<typename T, typename MatrixType> 
-	T checkConditioning(MatrixType &A, double tol, unsigned int maxIter);
-
-	template<typename T>
+template<typename T>
 	bool arrestCriterion(Eigen::Matrix<T, Eigen::Dynamic, 1> q, Eigen::Matrix<T, Eigen::Dynamic, 1> q_old, double tol){
 
 		return  (q - q_old).norm() < tol;
@@ -26,7 +21,7 @@ namespace conditioningCheck{
 		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old(A.rows(), 1), q(A.rows(), 1), z(A.rows(), 1);
 		T v;
 		q.setOnes();
-		q.normalized();
+		q.normalize();
 		
 		do {
 			q_old = q;
@@ -49,7 +44,7 @@ namespace conditioningCheck{
 		Eigen::Matrix<T, Eigen::Dynamic, 1> q_old(A.rows(), 1), q(A.rows(), 1), z(A.rows(), 1);
 		T v;
 		q.setOnes();
-		q.normalized();
+		q.normalize();
 		
 		UpdateStrategy::GradientUpdateStrategy<T, MatrixType> strategy;
 		IterativeSolver solver(100, &strategy, 1e-3, true, NormType::EUCLIDEAN, true);
@@ -73,19 +68,5 @@ namespace conditioningCheck{
 
 		return lambdaV(i) / q(i);
 	}
-
-
-	template<typename T, typename MatrixType> 
-	T checkConditioning(MatrixType &A, double tol, unsigned int maxIter){
-		T maxA = powerMethod<T, MatrixType>(A, tol, maxIter);
-		T minA = powerMethodInverse<T, MatrixType>(A, tol, maxIter);
-
-		return abs(maxA)/abs(minA);
-	}
-
-}
-
-
-
 
 #endif

@@ -7,7 +7,6 @@
 #include <solver/IterativeSolver.h>
 #include <solver/Solver.h>
 #include <util/MatrixReader.h>
-#include <util/conditioningCheckMethods.h>
 #include <iostream>
 
 #include <updateStrategy/ConjugateGradientUpdateStrategy.h>

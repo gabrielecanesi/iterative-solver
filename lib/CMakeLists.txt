@@ -21,18 +21,6 @@ if(NOT eigen_POPULATED)
 endif()
 
 
-FetchContent_Declare(spectra
- GIT_REPOSITORY https://github.com/yixuan/spectra.git
- GIT_TAG        v1.0.1
-)
-
-FetchContent_GetProperties(spectra)
-
-if(NOT spectra_POPULATED)
-  FetchContent_Populate(spectra)
-endif()
-
-
-include_directories(${eigen_SOURCE_DIR} ${spectra_SOURCE_DIR}/include)
+include_directories(${eigen_SOURCE_DIR})
 add_library(iterative_solver STATIC util/timer.cpp exceptions/WrongParameterValueException.cpp util/MatrixReader.cpp)
 target_link_libraries(iterative_solver)
