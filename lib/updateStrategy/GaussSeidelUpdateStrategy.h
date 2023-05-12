@@ -3,7 +3,7 @@
 #define ITERATIVE_SOLVER_GAUSSSEIDELUPDATESTRATEGY_H
 
 #include "./Strategy.h"
-#include "solver/BackwardSubstitutionSolver.h"
+#include "solver/ForwardSubstitutionSolver.h"
 
 #include "exceptions/WrongParameterValueException.h"
 
@@ -32,7 +32,7 @@ namespace UpdateStrategy {
         }
 
         const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {
-            BackwardSubstitutionSolver<T, MatrixType> solver;
+            ForwardSubstitutionSolver<T, MatrixType> solver;
 
             Eigen::Matrix<T, Eigen::Dynamic, 1> residual = compute_residual();
 

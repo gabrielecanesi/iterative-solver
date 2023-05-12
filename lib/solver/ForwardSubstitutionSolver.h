@@ -1,10 +1,10 @@
-#ifndef ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
-#define ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
+#ifndef ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
+#define ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
 
 #include "./Solver.h"
 
 template<typename T, typename MatrixType>
-class BackwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
+class ForwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
 
 public:
     SolverResults<T, MatrixType>* solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
@@ -64,4 +64,4 @@ private:
 
 };
 
-#endif //ITERATIVE_SOLVER_BACKWARDSUBSTITUTIONSOLVER_H
+#endif //ITERATIVE_SOLVER_FORWARDSUBSTITUTIONSOLVER_H
