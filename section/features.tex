@@ -1,0 +1,28 @@
+\section{Features}
+
+Nello sviluppo della libreria sono state introdotte un insieme di funzionalità aggiuntive, oltre alla possibile interazione tramite cli o GUI, quelle riguardanti unicamente l'implementazione della libreria sono illustrate di seguito:
+
+\begin{itemize}
+	\begin{item}
+		\textbf{Controllo della matrice}: Prima di risolvere il sistema lineare si possono eseguire una serie di controlli sulla matrice, infatti per la corretta convergenza dei metodi iterativi è necessario che la matrice sia simmetrica e definita positiva.
+	\end{item}
+	\begin{item}
+		\textbf{Condizionamento}: Assieme ai precedenti controlli, abbiamo deciso di calcolare il condizionamento della matrice. Il risultato viene prodotto calcolando il rapporto tra l'autovalore di modulo massimo e quello di modulo minimo. Tali valori sono stati ottenuti applicato il metodo delle potenze ed il suo inverso, optando però per una bassa precisione a favore della velocità di computazione.
+	\end{item}
+	\begin{item}
+		\textbf{Parametri dei metodi rilassati}: La libreria accetta i parametri $\omega$ per i metodi rilassati di Jacobi e Gauss-Seidel.
+	\end{item}
+	\begin{item}
+		\textbf{Selezione della norma}: Possibilità di specificare una determinata norma da usare nel criterio di arresto del metodo iterativo. Le possibili norme impostabili sono: Euclidea, Manhattan e infinito.
+	\end{item}
+	\begin{item}
+		\textbf{Forward substitution}: Abbiamo implementato la Forward substitution, iterando solamente sugli elementi presenti nella matrice. In questo modo è stato possibile sfruttare tale metodo per risolvere la matrice triangolare inferiore prodotta dall'algoritmo di Gauss-Seidel.
+	\end{item}
+	\begin{item}
+		\textbf{Modularità}: Il formato della matrice é stato reso indipendente dalla risoluzione, infatti nella libreria è possibile specificare, come parametro templato, la tipologia di matrice da risolvere. Gli algoritmi implementati sono generici, in modo tale da per poter gestire entrambi i formati.
+	\end{item}
+	\begin{item}
+		\textbf{Tolleranza}: Il valore di tolleranza viene passato alla libreria per impostare l'approssimazione da raggiungere prima di arrestare il metodo iterativo.
+	\end{item}
+
+\end{itemize}
