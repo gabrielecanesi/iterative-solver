@@ -80,7 +80,6 @@ public:
         
         if (!skipCondition) {
             cond = MatrixUtil::conditionNumber<T, MatrixType>(A, 1e-6, 1000);
-            std::cout << "Condition number: " << cond << std::endl;
         }
 
         

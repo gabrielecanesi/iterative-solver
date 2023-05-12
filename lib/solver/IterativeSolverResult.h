@@ -18,9 +18,14 @@ class IterativeSolverResult : public SolverResults<Precision, MatrixType> {
                             UpdateStrategy::Strategy<Precision, MatrixType> *usedStrategy,
                             NormType normType) : SolverResults<Precision, MatrixType>(solution, conditionNumber), M_usedStrategy(usedStrategy), M_normType(normType){}
 
+    IterativeSolverResult(const IterativeSolverResult &other) : SolverResults<Precision, MatrixType>(other),
+    M_neededIterations(other.M_neededIterations), M_usedStrategy(other.M_usedStrategy),
+    M_normType(other.M_normType) {}
+
     UpdateStrategy::Strategy<Precision, MatrixType> *usedStrategy() const {
         return M_usedStrategy;
     }
+
 
     unsigned int neededIterations() const {
         return M_neededIterations;

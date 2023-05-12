@@ -59,13 +59,13 @@ class IterativeBenchmark {
 
 public:
     IterativeBenchmark() : M_relativeError(0), solver(nullptr), matrixName() {}
-    IterativeBenchmark(const IterativeBenchmark &other) : solver(nullptr) {
+    IterativeBenchmark(const IterativeBenchmark &other) : solver(nullptr), result(other.result) {
         if (other.solver != nullptr) {
             solver = new IterativeSolver<Precision, MatrixType>(*other.solver);
         }
         this->timer = other.timer;
         this->M_relativeError = other.M_relativeError;
-        this->solution = other.solution;
+
         this->matrixName = other.matrixName;
     }
     IterativeBenchmark(std::string matrixName): matrixName(matrixName), M_relativeError(0), solver(nullptr) {}
@@ -93,7 +93,7 @@ public:
         timer.toc();
 
         M_relativeError = (*results->solution() - x).norm() / x.norm();
-
+        result = results;
         return getBenchmarkResult(results);
     }
 
@@ -130,6 +130,8 @@ public:
         return solver->tolerance();
     }
 
+    
+
     std::string toStdOutput() const {
         std::stringstream stream;
         std::cout << methodName() << std::endl;
@@ -152,6 +154,14 @@ public:
         return stream.str();
     }
 
+    Eigen::Matrix<Precision, Eigen::Dynamic, 1> *solution(){
+        return result->solution();
+    }
+
+    Precision conditionNumber() {
+        return result->conditionNumber();
+    }
+
     static std::string CsvHeader() {
         return "method,tolerance,elapsed_ms,iterations,relative_error,matrix_name";
     }
@@ -161,7 +171,7 @@ public:
 
 private:
     Precision M_relativeError;
-    Eigen::Matrix<Precision, Eigen::Dynamic, 1> solution;
+    IterativeSolverResult<Precision, MatrixType> *result;
     IterativeSolver<Precision, MatrixType>* solver;
     Timer timer;
 };
