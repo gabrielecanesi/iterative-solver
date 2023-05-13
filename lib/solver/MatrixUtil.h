@@ -7,6 +7,8 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <util/PowerMethod.h>
+#include <limits>
+#include <cmath>
 
 template <typename T, typename MatrixType>
     class IterativeSolver;
@@ -98,6 +100,10 @@ namespace MatrixUtil {
 
     template<typename T, typename MatrixType> 
 	T conditionNumber(MatrixType &A, double tol, unsigned int maxIter){
+        T inverseNormEstimate = hagerMethod<T, MatrixType>(A);
+        if (std::isnan(inverseNormEstimate)) {
+            return std::numeric_limits<T>::infinity();
+        }
         return (Eigen::RowVectorXd::Ones(A.rows()) * A.cwiseAbs()).maxCoeff() * hagerMethod<T, MatrixType>(A);
 	}
 
