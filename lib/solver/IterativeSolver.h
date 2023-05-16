@@ -24,20 +24,20 @@ private:
     NormType normType;
     bool skipCondition;
 
-    bool reachedTolerance(const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
+    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         double abNorm;
         double bNorm;
         switch (normType) {
             case NormType::EUCLIDEAN:
-                abNorm = (A * *currentResult.get() - b).norm();
+                abNorm = (A * currentResult - b).norm();
                 bNorm = b.norm();
                 break;
             case NormType::MANHATTAN:
-                abNorm = (A * *currentResult.get() - b).template lpNorm<1>();
+                abNorm = (A * currentResult - b).template lpNorm<1>();
                 bNorm = b.template lpNorm<1>();
                 break;
             case NormType::INFTY:
-                abNorm = (A * *currentResult.get() - b).template lpNorm<Eigen::Infinity>();
+                abNorm = (A * currentResult - b).template lpNorm<Eigen::Infinity>();
                 bNorm = b.template lpNorm<Eigen::Infinity>();
                 break;
             default:
@@ -103,7 +103,7 @@ public:
         do {
             currentResult = updateStrategy->update();
             ++iter;
-        } while (iter < maxIter && !reachedTolerance(currentResult, A, b, tol));
+        } while (iter < maxIter && !reachedTolerance(*currentResult.get(), A, b, tol));
 
         this->iterations = iter;
 
