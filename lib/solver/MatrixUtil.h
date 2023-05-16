@@ -9,6 +9,7 @@
 #include <util/PowerMethod.h>
 #include <limits>
 #include <cmath>
+#include <memory>
 
 template <typename T, typename MatrixType>
     class IterativeSolver;

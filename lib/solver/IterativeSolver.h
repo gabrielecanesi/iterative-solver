@@ -10,6 +10,7 @@
 #include "exceptions/NonSquareMatrixException.h"
 #include "constants.h"
 #include "MatrixUtil.h"
+#include <memory>
 
 template<typename T, typename MatrixType>
 class IterativeSolver : AbstractSolver<T, MatrixType> {

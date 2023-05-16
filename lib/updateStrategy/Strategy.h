@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include "solver/IterativeSolver.h"
+#include <memory>
 
 namespace UpdateStrategy
 {

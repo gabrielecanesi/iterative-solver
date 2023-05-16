@@ -6,6 +6,7 @@
 #include "updateStrategy/Strategy.h"
 #include "util/timer.h"
 #include "solver/NormType.h"
+#include <memory>
 
 template<typename Precision, typename MatrixType>
 struct BenchmarkResult {

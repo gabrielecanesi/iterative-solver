@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include <memory>
 
 
 template<typename T, typename MatrixType>

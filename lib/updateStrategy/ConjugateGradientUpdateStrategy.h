@@ -2,6 +2,7 @@
 #define CONJUGATE_GRADIENT_UPDATE_STRATEGY_H
 
 #include <updateStrategy/Strategy.h>
+#include <memory>
 
 namespace UpdateStrategy {
 

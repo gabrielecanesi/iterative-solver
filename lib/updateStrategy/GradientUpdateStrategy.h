@@ -13,7 +13,7 @@ namespace UpdateStrategy {
         GradientUpdateStrategy(const GradientUpdateStrategy& other) : Strategy<T, MatrixType>(other) {}
 
     private:
-        const const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
+        const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
             Eigen::Matrix<T, Eigen::Dynamic, 1> residual = computeResidual();
             T alpha = computeAlpha(residual);
             *this->result.get() += alpha * residual;

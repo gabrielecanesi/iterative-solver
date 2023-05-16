@@ -2,6 +2,8 @@
 #define SOLVER_RESULTS_H
 
 #include <Eigen/Dense>
+#include <memory>
+
 using namespace Eigen;
 template <typename Precision, typename MatrixType>
 class SolverResults {

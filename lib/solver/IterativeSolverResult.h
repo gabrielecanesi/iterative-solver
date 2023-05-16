@@ -5,6 +5,7 @@
 #include "updateStrategy/Strategy.h"
 #include "NormType.h"
 #include "SolverResults.h"
+#include <memory>
 
 template <typename Precision, typename MatrixType>
 class IterativeSolverResult : public SolverResults<Precision, MatrixType> {
