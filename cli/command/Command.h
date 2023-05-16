@@ -12,7 +12,9 @@ namespace command {
     public:
         Command(int argc, char *argv[]) : argc(argc), argv(argv), longopts() {};
 
-        virtual ~Command() = default;
+        virtual ~Command() {
+            delete[] longopts;
+        };
 
         static void printInstruction() {
             std::cout << "Usage: iterative-client <COMMAND> ..." << std::endl;
