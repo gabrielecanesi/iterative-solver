@@ -17,26 +17,26 @@ class IterativeSolver : AbstractSolver<T, MatrixType> {
 private:
     unsigned int maxIter;
     unsigned int iterations;
-    UpdateStrategy::Strategy<T, MatrixType>* updateStrategy;
+    std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> updateStrategy;
     T tol;
     bool skipMatrixCheck = false;
     NormType normType;
     bool skipCondition;
 
-    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
+    bool reachedTolerance(const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         double abNorm;
         double bNorm;
         switch (normType) {
             case NormType::EUCLIDEAN:
-                abNorm = (A * currentResult- b).norm();
+                abNorm = (A * *currentResult.get() - b).norm();
                 bNorm = b.norm();
                 break;
             case NormType::MANHATTAN:
-                abNorm = (A * currentResult - b).template lpNorm<1>();
+                abNorm = (A * *currentResult.get() - b).template lpNorm<1>();
                 bNorm = b.template lpNorm<1>();
                 break;
             case NormType::INFTY:
-                abNorm = (A * currentResult - b).template lpNorm<Eigen::Infinity>();
+                abNorm = (A * *currentResult.get() - b).template lpNorm<Eigen::Infinity>();
                 bNorm = b.template lpNorm<Eigen::Infinity>();
                 break;
             default:
@@ -48,7 +48,7 @@ private:
 
 
 public:
-    IterativeSolver(unsigned int maxIter, UpdateStrategy::Strategy<T, MatrixType>* const updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN, bool skipCondition = false) : AbstractSolver<T, MatrixType>(),
+    IterativeSolver(unsigned int maxIter, std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> updateStrategy, T tol, bool skipMatrixCheck, NormType normType = NormType::EUCLIDEAN, bool skipCondition = false) : AbstractSolver<T, MatrixType>(),
                                                                                                                                         maxIter(maxIter),
                                                                                                                                         updateStrategy(updateStrategy),
                                                                                                                                         tol(tol),
@@ -70,7 +70,7 @@ public:
         return this->iterations;
     }
 
-    virtual SolverResults<T, MatrixType>*
+    virtual std::shared_ptr<SolverResults<T, MatrixType>>
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
         if (A.rows() != A.cols()) {
             throw NonSquareMatrixException();
@@ -85,9 +85,10 @@ public:
         
 
         if (b.isZero(ZERO_THRESHOLD)) {
-            auto *solution = new Eigen::Matrix<T, Eigen::Dynamic, 1>(b.rows(), 1);
-            solution->setZero();
-            return new IterativeSolverResult<T, MatrixType>(solution, cond, updateStrategy, normType);
+            std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solution = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(b.rows(), 1);
+            solution.get()->setZero();
+            auto sol = std::make_shared<IterativeSolverResult<T, MatrixType>>(solution, cond, updateStrategy, normType);
+            return sol;
         }
 
         if(!skipMatrixCheck) {
@@ -95,18 +96,17 @@ public:
         }
 
         updateStrategy->init(A, b);
-        const Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult;
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult;
         unsigned int iter = 0;
 
         do {
             currentResult = updateStrategy->update();
             ++iter;
-        } while (iter < maxIter && !reachedTolerance(*currentResult, A, b, tol));
+        } while (iter < maxIter && !reachedTolerance(currentResult, A, b, tol));
 
         this->iterations = iter;
 
-        SolverResults<T, MatrixType> *results = new IterativeSolverResult<T, MatrixType>(currentResult, cond, updateStrategy, normType);
-        return results;
+        return std::make_shared<IterativeSolverResult<T, MatrixType>>(currentResult, cond, updateStrategy, normType);
     }
 
     std::string methodName() const {

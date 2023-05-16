@@ -12,7 +12,7 @@
 template<typename T, typename MatrixType>
 class AbstractSolver {
 public:
-    virtual SolverResults<T, MatrixType>*
+    virtual std::shared_ptr<SolverResults<T, MatrixType>>
     solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) = 0;
     virtual ~AbstractSolver() {}
 };

@@ -10,19 +10,19 @@ template <typename Precision, typename MatrixType>
 class IterativeSolverResult : public SolverResults<Precision, MatrixType> {
     private:
     unsigned int M_neededIterations;
-    UpdateStrategy::Strategy<Precision, MatrixType> *M_usedStrategy;
+    std::shared_ptr<UpdateStrategy::Strategy<Precision, MatrixType>> M_usedStrategy;
     NormType M_normType;
 
     public:
-    IterativeSolverResult(const Eigen::Matrix<Precision, Eigen::Dynamic, 1> *solution, Precision conditionNumber,
-                            UpdateStrategy::Strategy<Precision, MatrixType> *usedStrategy,
+    IterativeSolverResult(std::shared_ptr<Matrix<Precision, Eigen::Dynamic, 1>> solution, Precision conditionNumber,
+                            std::shared_ptr<UpdateStrategy::Strategy<Precision, MatrixType>> usedStrategy,
                             NormType normType) : SolverResults<Precision, MatrixType>(solution, conditionNumber), M_usedStrategy(usedStrategy), M_normType(normType){}
 
     IterativeSolverResult(const IterativeSolverResult &other) : SolverResults<Precision, MatrixType>(other),
     M_neededIterations(other.M_neededIterations), M_usedStrategy(other.M_usedStrategy),
     M_normType(other.M_normType) {}
 
-    UpdateStrategy::Strategy<Precision, MatrixType> *usedStrategy() const {
+    std::shared_ptr<UpdateStrategy::Strategy<Precision, MatrixType>> usedStrategy() const {
         return M_usedStrategy;
     }
 

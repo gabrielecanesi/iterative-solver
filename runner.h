@@ -45,7 +45,7 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
 
     for (auto &strategyPointer : methods) {
         auto benchmark = IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>(matrixName);
-        benchmark.run(A, b, 20000, tolerance, *strategyPointer.get(), x, skipMatrixCheck, normType);
+        benchmark.run(A, b, 20000, tolerance, strategyPointer, x, skipMatrixCheck, normType);
         results.push_back(benchmark);
     }
 

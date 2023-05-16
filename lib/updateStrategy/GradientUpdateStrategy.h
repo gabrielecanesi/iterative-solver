@@ -13,11 +13,11 @@ namespace UpdateStrategy {
         GradientUpdateStrategy(const GradientUpdateStrategy& other) : Strategy<T, MatrixType>(other) {}
 
     private:
-        const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {
+        const const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
             Eigen::Matrix<T, Eigen::Dynamic, 1> residual = computeResidual();
             T alpha = computeAlpha(residual);
-            this->result += alpha * residual;
-            return &this->result;
+            *this->result.get() += alpha * residual;
+            return this->result;
         }
 
 
@@ -29,15 +29,15 @@ namespace UpdateStrategy {
         }
 
         Eigen::Matrix<T, Eigen::Dynamic, 1> computeResidual() const {
-            return *this->b - (*this->A * this->result);
+            return *this->b - (*this->A * *this->result.get());
         }
 
         virtual std::string name() const override {
             return "Gradient";
         }
 
-        virtual Strategy<T, MatrixType> *clone() override {
-            return new GradientUpdateStrategy<T, MatrixType>(*this);
+        virtual std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> clone() override {
+            return std::make_shared<GradientUpdateStrategy<T, MatrixType>>(*this);
         }
     };
 

@@ -4,38 +4,41 @@
 #include <Eigen/Sparse>
 #include "solver/IterativeSolver.h"
 
-namespace UpdateStrategy {
+namespace UpdateStrategy
+{
 
-    template<typename T, typename MatrixType>
-    class Strategy {
+    template <typename T, typename MatrixType>
+    class Strategy
+    {
     protected:
-        Eigen::Matrix<T, Eigen::Dynamic, 1> result;
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> result;
         Eigen::Matrix<T, Eigen::Dynamic, 1> *b;
         MatrixType *A;
 
-
     public:
-        virtual const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() = 0;
+        virtual const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() = 0;
 
         virtual ~Strategy() {}
 
-        Strategy(){}
-        Strategy(const Strategy &other) {
+        Strategy() {}
+        Strategy(const Strategy &other)
+        {
             this->A = other.A;
             this->b = other.b;
             this->result = other.result;
         }
 
-        virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+        virtual void init(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b)
+        {
             this->A = &A;
             this->b = &b;
-            result = Eigen::Matrix<T, Eigen::Dynamic, 1>(this->A->cols(), 1);
-            result.setZero();
+            result = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(this->A->cols(), 1);
+            result.get()->setZero();
         }
 
         virtual std::string name() const = 0;
 
-        virtual Strategy<T, MatrixType> *clone() = 0;
+        virtual std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> clone() = 0;
     };
 
 }

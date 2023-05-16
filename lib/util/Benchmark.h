@@ -11,8 +11,8 @@ template<typename Precision, typename MatrixType>
 struct BenchmarkResult {
 
     BenchmarkResult(): elapsedMillisecondsMean(0), neededIterationsMean(0), relativeErrorMean(0), allValues() {}
-    BenchmarkResult(unsigned int elapsedMilliseconds, IterativeSolverResult<Precision, MatrixType> *results, Precision relativeError) :
-                elapsedMillisecondsMean(elapsedMilliseconds), results(results), neededIterationsMean(results->neededIterations()),
+    BenchmarkResult(unsigned int elapsedMilliseconds, std::shared_ptr<IterativeSolverResult<Precision, MatrixType>> results, Precision relativeError) :
+                elapsedMillisecondsMean(elapsedMilliseconds), results(results), neededIterationsMean(results.get()->neededIterations()),
                 relativeErrorMean(relativeError), allValues() {
         allValues.push_back(*this);
     }
@@ -48,7 +48,7 @@ public:
     double ElapsedMillisecondsVariance;
     unsigned int neededIterationsMean;
     Precision relativeErrorMean;
-    IterativeSolverResult<Precision, MatrixType> *results;
+    std::shared_ptr<IterativeSolverResult<Precision, MatrixType>> results;
 
 };
 
@@ -74,22 +74,22 @@ public:
     }
 
     BenchmarkResult<Precision, MatrixType> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
-                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
+                                   Precision tolerance, std::shared_ptr<UpdateStrategy::Strategy<Precision, MatrixType>> strategy, const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
                                    NormType normType = NormType::EUCLIDEAN) {
 
         return run(A, b, maxIter, tolerance, strategy, x, false, normType);
     }
 
     BenchmarkResult<Precision, MatrixType> run(MatrixType &A, Eigen::Matrix<Precision, Eigen::Dynamic, 1> &b, unsigned int maxIter,
-                                   Precision tolerance, UpdateStrategy::Strategy<Precision, MatrixType> &strategy,
+                                   Precision tolerance, std::shared_ptr<UpdateStrategy::Strategy<Precision, MatrixType>> strategy,
                                    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> &x,
                                    bool skipMatrixCheck,
                                    NormType normType = NormType::EUCLIDEAN) {
 
-        solver = new IterativeSolver<Precision, MatrixType>(maxIter, &strategy, tolerance, skipMatrixCheck, normType);
+        solver = new IterativeSolver<Precision, MatrixType>(maxIter, strategy, tolerance, skipMatrixCheck, normType);
         timer.tic();
-        IterativeSolverResult<Precision, MatrixType> *results = static_cast<IterativeSolverResult<Precision, MatrixType>*>(solver->solve(A, b));
-        results->solution()->eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
+        std::shared_ptr<IterativeSolverResult<Precision, MatrixType>> results = std::static_pointer_cast<IterativeSolverResult<Precision, MatrixType>>(solver->solve(A, b));
+        results.get()->solution()->eval(); // As a benchmark, we make sure that the whole solution is actually evaluated at this moment.
         timer.toc();
 
         M_relativeError = (*results->solution() - x).norm() / x.norm();
@@ -97,7 +97,7 @@ public:
         return getBenchmarkResult(results);
     }
 
-    BenchmarkResult<Precision, MatrixType> getBenchmarkResult(IterativeSolverResult<Precision, MatrixType> *results) {
+    BenchmarkResult<Precision, MatrixType> getBenchmarkResult(std::shared_ptr<IterativeSolverResult<Precision, MatrixType>> results) {
         return BenchmarkResult<Precision, MatrixType>(timer.elapsedMilliseconds(), results, M_relativeError);
     }
 
@@ -171,7 +171,7 @@ public:
 
 private:
     Precision M_relativeError;
-    IterativeSolverResult<Precision, MatrixType> *result;
+    std::shared_ptr<IterativeSolverResult<Precision, MatrixType>> result;
     IterativeSolver<Precision, MatrixType>* solver;
     Timer timer;
 };

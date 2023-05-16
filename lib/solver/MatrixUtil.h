@@ -49,15 +49,15 @@ namespace MatrixUtil {
             b(i, 0) = op;
         }
 
-        UpdateStrategy::ConjugateGradientUpdateStrategy<T, MatrixType> strategy;
-		IterativeSolver<T, MatrixType> solver(50, &strategy, 1e-2, true, NormType::EUCLIDEAN, true);
+        auto strategy = std::make_shared<UpdateStrategy::ConjugateGradientUpdateStrategy<T, MatrixType>>();
+		IterativeSolver<T, MatrixType> solver(50, strategy, 1e-2, true, NormType::EUCLIDEAN, true);
         MatrixType At = A.transpose();
         T rho = 0;
         int maxIter = 10;
 
         do {
-            const Eigen::Matrix<T, Eigen::Dynamic, 1> *solution = solver.solve(A, b)->solution();
-            T xNorm = solution->template lpNorm<1>();
+            std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solution = solver.solve(A, b)->solution();
+            T xNorm = solution.get()->template lpNorm<1>();
         
 
 
@@ -68,7 +68,7 @@ namespace MatrixUtil {
             rho = xNorm;
 
             for (int i = 0; i < A.cols(); ++i) {
-                if ((*solution)(i, 0) < 0) {
+                if ((*solution.get())(i, 0) < 0) {
                     y(i, 0) = -1;
                 } else {
                     y(i, 0) = 1;
@@ -78,12 +78,12 @@ namespace MatrixUtil {
             auto z = solver.solve(At, y)->solution();
             int maxZ = 0;
             for (int i = 1; i < A.cols(); ++i) {
-                if ((*z)(i, 0) > maxZ) {
+                if ((*z.get())(i, 0) > maxZ) {
                     maxZ = i;
                 }
             }
 
-            if ((*z)(maxZ) < z->transpose() * b) {
+            if ((*z.get())(maxZ) < z.get()->transpose() * b) {
                 return rho;
             }
 

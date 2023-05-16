@@ -2,18 +2,18 @@
 #define SOLVER_RESULTS_H
 
 #include <Eigen/Dense>
-
+using namespace Eigen;
 template <typename Precision, typename MatrixType>
 class SolverResults {
     protected:
-    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> *M_solution;
+    std::shared_ptr<Matrix<Precision, Eigen::Dynamic, 1>> M_solution;
     Precision M_conditionNumber;
 
     public:
-    SolverResults(const Eigen::Matrix<Precision, Eigen::Dynamic, 1> *solution, Precision conditionNumber) : M_solution(solution), M_conditionNumber(conditionNumber) {}
+    SolverResults(std::shared_ptr<Matrix<Precision, Eigen::Dynamic, 1>> solution, Precision conditionNumber) : M_solution(solution), M_conditionNumber(conditionNumber) {}
         
     
-    const Eigen::Matrix<Precision, Eigen::Dynamic, 1> *solution() const {
+    std::shared_ptr<Matrix<Precision, Eigen::Dynamic, 1>> solution() const {
         return M_solution;
     }
 

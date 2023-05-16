@@ -31,18 +31,18 @@ namespace UpdateStrategy {
             P->diagonal() /= w;
         }
 
-        const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {
+        const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
             ForwardSubstitutionSolver<T, MatrixType> solver;
 
             Eigen::Matrix<T, Eigen::Dynamic, 1> residual = compute_residual();
 
 
-            this->result = this->result - *solver.solve(*P, residual)->solution();
-            return &this->result;
+            *this->result.get() = *this->result.get() - *solver.solve(*P, residual)->solution();
+            return this->result;
         }
 
-        virtual Strategy<T, MatrixType> *clone() override {
-            return new GaussSeidelUpdateStrategy<T, MatrixType>(*this);
+        virtual std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> clone() override {
+            return std::make_shared<GaussSeidelUpdateStrategy<T, MatrixType>>(*this);
         }
 
         virtual std::string name() const override {
@@ -54,7 +54,7 @@ namespace UpdateStrategy {
         T w;
 
         const Eigen::Matrix<T, Eigen::Dynamic, 1> compute_residual() const {
-            return (*this->A * this->result) - *this->b;
+            return (*this->A * *this->result.get()) - *this->b;
         }
     };
 

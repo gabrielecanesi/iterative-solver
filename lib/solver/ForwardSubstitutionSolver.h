@@ -7,17 +7,17 @@ template<typename T, typename MatrixType>
 class ForwardSubstitutionSolver: public AbstractSolver<T, MatrixType> {
 
 public:
-    SolverResults<T, MatrixType>* solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
-        Eigen::Matrix<T, Eigen::Dynamic, 1>* solution = solveSpecific(A, b);
-        return new SolverResults<T, MatrixType>(solution, 0);
+    std::shared_ptr<SolverResults<T, MatrixType>> solve(MatrixType &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) override {
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solution = solveSpecific(A, b);
+        return std::make_shared<SolverResults<T, MatrixType>>(solution, 0);
     }
 
 private:
 
-    Eigen::Matrix<T, Eigen::Dynamic, 1>* solveSpecific(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+     std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solveSpecific(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
         
         const int n = b.rows();
-        Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult = new Eigen::Matrix<T, Eigen::Dynamic, 1>(n, 1);
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(n, 1);
 
         (*currentResult)(0, 0) = b(0) / A.coeff(0, 0);
 
@@ -32,10 +32,10 @@ private:
         return currentResult;
     }
 
-    Eigen::Matrix<T, Eigen::Dynamic, 1>* solveSpecific(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+     std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solveSpecific(Eigen::SparseMatrix<T> &A, Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
 
         const int n = b.rows();
-        Eigen::Matrix<T, Eigen::Dynamic, 1> *currentResult = new Eigen::Matrix<T, Eigen::Dynamic, 1>(n, 1);
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(n, 1);
         Eigen::Matrix<T, Eigen::Dynamic, 1> summation(n, 1);
         summation.fill(0);
         int currentCol = 0;

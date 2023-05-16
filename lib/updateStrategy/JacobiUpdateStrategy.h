@@ -32,19 +32,19 @@ namespace UpdateStrategy {
         Eigen::DiagonalMatrix<T, Eigen::Dynamic> *PInverse;
         T w;
 
-        const Eigen::Matrix<T, Eigen::Dynamic, 1> *const update() override {
+        const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
 
-            Eigen::Matrix<T, Eigen::Dynamic, 1> r = (*this->A * this->result) - *this->b;
-            this->result -= *PInverse * r;
-            return &this->result;
+            Eigen::Matrix<T, Eigen::Dynamic, 1> r = (*this->A * *this->result.get()) - *this->b;
+            *this->result.get() -= *PInverse * r;
+            return this->result;
         }
 
         virtual std::string name() const override {
             return "Jacobi";
         }
 
-        virtual Strategy<T, MatrixType> *clone() override {
-            return new JacobiUpdateStrategy<T, MatrixType>(*this);
+        virtual std::shared_ptr<UpdateStrategy::Strategy<T, MatrixType>> clone() override {
+            return std::make_shared<JacobiUpdateStrategy<T, MatrixType>>(*this);
         }
 
     };
