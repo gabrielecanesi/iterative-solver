@@ -7,8 +7,12 @@ Nello sviluppo della libreria sono state introdotte un insieme di funzionalità 
 		\textbf{Controllo della matrice}: Prima di risolvere il sistema lineare si possono eseguire una serie di controlli sulla matrice, infatti per la corretta convergenza dei metodi iterativi è necessario che la matrice sia simmetrica e definita positiva.
 	\end{item}
 	\begin{item}
-		\textbf{Condizionamento}: Assieme ai precedenti controlli, abbiamo deciso di calcolare il condizionamento della matrice. Il risultato viene prodotto calcolando il rapporto tra l'autovalore di modulo massimo e quello di modulo minimo. Tali valori sono stati ottenuti applicato il metodo delle potenze ed il suo inverso, optando però per una bassa precisione a favore della velocità di computazione.
-	\end{item}
+		\textbf{Stima del numero di condizionamento}: Assieme ai precedenti controlli, abbiamo deciso di calcolare un'approssimazione del numero di condizionamento della matrice dei coefficienti. Essa si basa sulla stima della norma 1 della sua inversa, senza l'effettiva inversione della matrice, attraverso il metodo di Hager \cite{hager, hager2}.
+		
+		Grazie a questa stima è possibile calcolare il condizionamento di $A$ attraverso la formula:
+		$$ cond(A) = \|A\|_1  \|A^{-1}||_1$$
+			
+			\end{item}
 	\begin{item}
 		\textbf{Parametri dei metodi rilassati}: La libreria accetta i parametri $\omega$ per i metodi rilassati di Jacobi e Gauss-Seidel.
 	\end{item}
@@ -19,7 +23,7 @@ Nello sviluppo della libreria sono state introdotte un insieme di funzionalità 
 		\textbf{Forward substitution}: Abbiamo implementato la Forward substitution, iterando solamente sugli elementi presenti nella matrice. In questo modo è stato possibile sfruttare tale metodo per risolvere la matrice triangolare inferiore prodotta dall'algoritmo di Gauss-Seidel.
 	\end{item}
 	\begin{item}
-		\textbf{Modularità}: Il formato della matrice é stato reso indipendente dalla risoluzione, infatti nella libreria è possibile specificare, come parametro templato, la tipologia di matrice da risolvere. Gli algoritmi implementati sono generici, in modo tale da per poter gestire entrambi i formati.
+		\textbf{Modularità}: Il formato della matrice é stato reso indipendente dalla risoluzione, infatti nella libreria è possibile specificare, come parametro templato, la tipologia di matrice da risolvere. Gli algoritmi implementati sono generici, in modo tale da per poter gestire entrambi i formati in modo flessibile.
 	\end{item}
 	\begin{item}
 		\textbf{Tolleranza}: Il valore di tolleranza viene passato alla libreria per impostare l'approssimazione da raggiungere prima di arrestare il metodo iterativo.
