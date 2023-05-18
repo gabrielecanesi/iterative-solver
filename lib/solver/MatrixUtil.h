@@ -55,7 +55,7 @@ namespace MatrixUtil {
         }
 
         auto strategy = std::make_shared<UpdateStrategy::ConjugateGradientUpdateStrategy<T, MatrixType>>();
-		IterativeSolver<T, MatrixType> solver(10, strategy, 1e-10, true, NormType::EUCLIDEAN, true);
+		IterativeSolver<T, MatrixType> solver(20, strategy, 1e-10, true, NormType::EUCLIDEAN, true);
         MatrixType At = A.transpose();
         T yNorm = 0;
         int maxIter = 1000;
