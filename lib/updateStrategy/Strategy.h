@@ -2,7 +2,7 @@
 #define UPDATE_STRATEGY_H
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include "solver/IterativeSolver.h"
+#include <solver/IterativeSolver.h>
 #include <memory>
 
 namespace UpdateStrategy
@@ -15,13 +15,14 @@ namespace UpdateStrategy
         std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> result;
         Eigen::Matrix<T, Eigen::Dynamic, 1> *b;
         MatrixType *A;
+        Eigen::Matrix<T, Eigen::Dynamic, 1> residual;
 
     public:
         virtual const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() = 0;
 
         virtual ~Strategy() {}
 
-        Strategy() {}
+        Strategy(): residual() {}
         Strategy(const Strategy &other)
         {
             this->A = other.A;
@@ -35,6 +36,14 @@ namespace UpdateStrategy
             this->b = &b;
             result = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(this->A->cols(), 1);
             result.get()->setZero();
+        }
+
+        Eigen::Matrix<T, Eigen::Dynamic, 1>& getResidual(){
+            return this->residual;
+        }
+
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> getResult() {
+            return this->result;
         }
 
         virtual std::string name() const = 0;

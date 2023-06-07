@@ -34,8 +34,8 @@ namespace UpdateStrategy {
 
         const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
 
-            Eigen::Matrix<T, Eigen::Dynamic, 1> r = (*this->A * *this->result.get()) - *this->b;
-            *this->result.get() -= *PInverse * r;
+            Eigen::Matrix<T, Eigen::Dynamic, 1> &r = this->residual;
+            *this->result.get() += *PInverse * r;
             return this->result;
         }
 

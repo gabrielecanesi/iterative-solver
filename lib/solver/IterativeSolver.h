@@ -24,20 +24,20 @@ private:
     NormType normType;
     bool skipCondition;
 
-    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
+    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
         double abNorm;
         double bNorm;
         switch (normType) {
             case NormType::EUCLIDEAN:
-                abNorm = (A * currentResult - b).norm();
+                abNorm = (updateStrategy->getResidual()).norm();
                 bNorm = b.norm();
                 break;
             case NormType::MANHATTAN:
-                abNorm = (A * currentResult - b).template lpNorm<1>();
+                abNorm = (updateStrategy->getResidual()).template lpNorm<1>();
                 bNorm = b.template lpNorm<1>();
                 break;
             case NormType::INFTY:
-                abNorm = (A * currentResult - b).template lpNorm<Eigen::Infinity>();
+                abNorm = (updateStrategy->getResidual()).template lpNorm<Eigen::Infinity>();
                 bNorm = b.template lpNorm<Eigen::Infinity>();
                 break;
             default:
@@ -45,6 +45,10 @@ private:
         }
         
         return (abNorm / bNorm) < tol;
+    }
+
+    T updateResidual(const Eigen::Matrix<T, Eigen::Dynamic, 1> &currentResult, const MatrixType &A, const Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
+        updateStrategy->getResidual() = b - (A * currentResult);
     }
 
 
@@ -97,13 +101,15 @@ public:
         }
 
         updateStrategy->init(A, b);
-        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult;
+        std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> currentResult = updateStrategy->getResult();
+        updateResidual(*currentResult, A, b);
         unsigned int iter = 0;
 
         do {
             currentResult = updateStrategy->update();
+            updateResidual(*currentResult, A, b);
             ++iter;
-        } while (iter < maxIter && !reachedTolerance(*currentResult.get(), A, b, tol));
+        } while (iter < maxIter && !reachedTolerance(b, tol));
 
         this->iterations = iter;
 

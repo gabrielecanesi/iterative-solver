@@ -34,10 +34,10 @@ namespace UpdateStrategy {
         const std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> update() override {
             ForwardSubstitutionSolver<T, MatrixType> solver;
 
-            Eigen::Matrix<T, Eigen::Dynamic, 1> residual = compute_residual();
+            Eigen::Matrix<T, Eigen::Dynamic, 1>& residual = this->residual;
 
 
-            *this->result.get() = *this->result.get() - *solver.solve(*P, residual)->solution();
+            *this->result.get() = *this->result.get() + *solver.solve(*P, residual)->solution();
             return this->result;
         }
 
@@ -53,9 +53,6 @@ namespace UpdateStrategy {
         MatrixType *P;
         T w;
 
-        const Eigen::Matrix<T, Eigen::Dynamic, 1> compute_residual() const {
-            return (*this->A * *this->result.get()) - *this->b;
-        }
     };
 
 }
