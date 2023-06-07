@@ -32,8 +32,9 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
     
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> x(A.rows(), 1);
     x.setOnes();
+    
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> b = A * x;
-
+    
     std::vector<std::shared_ptr<Strategy<Precision, Eigen::SparseMatrix<Precision>>>> methods {
             std::make_shared<GradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
             std::make_shared<ConjugateGradientUpdateStrategy<Precision, Eigen::SparseMatrix<Precision>>>(),
@@ -47,6 +48,11 @@ std::vector<IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>> testM
         auto benchmark = IterativeBenchmark<Precision, Eigen::SparseMatrix<Precision>>(matrixName);
         benchmark.run(A, b, 20000, tolerance, strategyPointer, x, skipMatrixCheck, normType);
         results.push_back(benchmark);
+
+        for (int i = 0; i < b.rows(); ++i) {
+            std::cout << (*benchmark.solution())(i, 0) << "; ";
+        }
+        std:: cout << std::endl;
     }
 
     std::cout << results[0].conditionNumber() << std::endl;

@@ -156,7 +156,7 @@ public:
     }
 
     Eigen::Matrix<Precision, Eigen::Dynamic, 1> *solution(){
-        return result->solution();
+        return result->solution().get();
     }
 
     Precision conditionNumber() {
