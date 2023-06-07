@@ -43,10 +43,11 @@ class IterativeSolver <template<typename T, typename MatrixType>> {
 	+IterativeSolver(const IterativeSolver<T, MatrixType>& other)
 	-normType : NormType
 	+solve(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : SolverResults<T , MatrixType>*
+        -T updateResidual(&currentResult, &A, &b) : T
 	-tol : T
 	+tolerance() : T {query}
 	-updateStrategy : UpdateStrategy::Strategy<T, MatrixType>*
-	-reachedTolerance(&currentResult, const &A,&b, tol) : bool {query}
+	-reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) : bool {query}
 	-skipMatrixCheck : bool
 	+methodName() : std::string {query}
 	-iterations : unsigned int
@@ -147,7 +148,6 @@ namespace UpdateStrategy {
 		+GaussSeidelUpdateStrategy(T w)
 		+GaussSeidelUpdateStrategy()
 		+GaussSeidelUpdateStrategy(const& other)
-		-compute_residual() : Eigen::Matrix<T , Eigen::Dynamic , 1> {query}
 		+update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
 		-P : MatrixType*
 		+clone() : Strategy<T , MatrixType>*
@@ -186,9 +186,12 @@ namespace UpdateStrategy {
 		#result : Eigen::Matrix<T, Eigen::Dynamic, 1>
 		#b : Eigen::Matrix<T, Eigen::Dynamic, 1>*
 		#A : MatrixType*
+                #residual: Eigen::Matrix<T, Eigen::Dynamic, 1>
 		+{abstract} clone() : Strategy<T , MatrixType>*
 		+{abstract} name() : std::string {query}
 		+init(MatrixType& A, &b) : void
+                +getResidual(): Eigen::Matrix<T, Eigen::Dynamic, 1>&
+                +getResult(): std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>>
 	}
 }
 
