@@ -13,6 +13,8 @@ La libreria viene compilata producendo in output un file binario non eseguibile;
 \subsection{Libreria effettiva}
 Come citato in precedenza, questo è il sottoprogetto principale tra quelli presenti. In Figura \ref{fig:libdiagram} si può osservare l'architettura delle classi di questo progetto, con l'omissione di alcuni tipi nelle firme dei metodi e il caricamento in formato vettoriale per questioni di leggibilità. Il componente più importante è la classe \texttt{IterativeSolver}. Questa classe estende (e implementa, essendo concreta) la classe astratta \texttt{Solver}. All'interno di queste due classi  è presente un metodo \texttt{solve} che prende in input la matrice dei coefficienti, il vettore dei termini noti e restituisce il vettore soluzione calcolato. Il punto fondamentale della risoluzione di un sistema in modo iterativo è il ciclo che esegue gli update a partire dalla soluzione corrente: essendo uguale per qualsiasi metodo, abbiamo fatto in modo che il solver iterativo avesse come attributo di istanza un puntatore alla regola astratta di update, che viene estesa e implementata dalle regole specifiche, istanzate da chi usa la libreria, sulla base delle proprie esigenze. Questa struttura è un'applicazione del design pattern \textit{Strategy} \cite{Strategy}. Esiste una classe concreta per ognuno dei quattro metodi richiesti.
 
+Questa libreria, inoltre, permette di creare dei solver personalizzando il tipo di matrice dei coefficienti (sparsa o densa) e il tipo di precisione (\path{float} o \path{double}) utilizzando in modo esteso i template di C++.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{figures/libDiagram.pdf}
