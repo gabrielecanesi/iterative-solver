@@ -4,33 +4,39 @@ Nello sviluppo della libreria sono state introdotte un insieme di funzionalità 
 
 \begin{itemize}
 	\begin{item}
-		\textbf{Controllo della matrice}: Prima di risolvere il sistema lineare si possono eseguire una serie di controlli sulla matrice, tra cui quello di simmetria e definizione positiva.
+		\textbf{Controllo della matrice}: Prima di risolvere il sistema lineare si possono eseguire una serie di controlli sulla matrice, tra cui quello di simmetria e definizione positiva. Come visto a lezione, un modo relativamente veloce per controllare che una matrice sia definita positiva è quello di provare una decomposizione di Cholesky e controllare che non dia errori. In caso di fallimento, la matrice non è definita positiva.
+		
+		Abbiamo pensato di aggiungere questa caratteristica per due motivi:
+			\begin{enumerate}
+				\item Si potrebbero già conoscere le caratteristiche della matrice in questione, rendendo inutile il tempo speso a ricontrollarla;
+				\item La fattorizzazione di Cholesky potrebbe addensare la matrice. Questo comporta una perdita di efficienza significativa in termini di spazio quando le matrici sono particolarmente sparse e di dimensione molto grande.
+			\end{enumerate}
 	\end{item}
 	\begin{item}
-		\textbf{Stima del numero di condizionamento}: Assieme ai precedenti controlli, abbiamo deciso di calcolare un'approssimazione del numero di condizionamento della matrice dei coefficienti. Essa si basa sulla stima della norma 1 della sua inversa, senza l'effettiva inversione della matrice, attraverso il metodo di Hager \cite{hager, hager2}.
+		\textbf{Stima del numero di condizionamento}: Assieme ai precedenti controlli, abbiamo deciso di calcolare un'approssimazione del numero di condizionamento della matrice dei coefficienti. Essa si basa sulla stima della norma 1 della sua inversa, senza l'effettiva inversione della matrice, attraverso il metodo di Hager \cite{hager, hager2}. Questo è un metodo iterativo che permette di effettuare la stima senza introdurre il fenomeno del \textit{fill-in}.
 		
 		Grazie a questa stima è possibile calcolare il condizionamento di $A$ attraverso la formula:
 		$$ cond(A) = \|A\|_1  \|A^{-1}||_1$$
 			
+			Teoricamente, questo algoritmo calcola la norma uno di una matrice; tuttavia, è possibile calcolare la norma uno dell'inversa semplicemente sostituendo le moltiplicazioni matrice per vettore con delle risoluzioni di sistemi lineari. Così facendo, si può ricavare una stima della norma 1, moltiplicandola, poi, per la norma 1 esatta della matrice originale.
 			\end{item}
 	\begin{item}
-		\textbf{Parametri dei metodi rilassati}: La libreria accetta i parametri $\omega$ per i metodi rilassati di Jacobi e Gauss-Seidel.
+		\textbf{Parametri dei metodi rilassati}: La libreria accetta i parametri $\omega$ per i metodi rilassati di Jacobi e Gauss-Seidel. Gli intervalli sono limitati, per questioni di convergenza, agli intervalli $(0, 1]$ per il metodo di Jacobi e $(0, 2)$ per Gauss-Seidel. Potrebbe essere che, infatti, scegliendo un valore al di fuori dagli intervalli imposti, la convergenza nella risoluzione del sistema non sia più non crescente.
 	\end{item}
 	\begin{item}
-		\textbf{Selezione della norma}: Possibilità di specificare una determinata norma da usare nel criterio di arresto del metodo iterativo. Le possibili norme impostabili sono: Euclidea, Manhattan e infinito.
+		\textbf{Selezione della norma}: Possibilità di specificare una determinata norma da usare nel criterio di arresto del metodo iterativo. Le possibili norme impostabili sono: la norma 1, 2 e infinito.
 	\end{item}
 	\begin{item}
-		\textbf{Forward substitution}: Abbiamo implementato la Forward substitution, iterando solamente sugli elementi presenti nella matrice. In questo modo è stato possibile sfruttare tale metodo per risolvere la matrice triangolare inferiore prodotta dall'algoritmo di Gauss-Seidel.
+		\textbf{Forward substitution}: Abbiamo implementato l'algoritmo di sostituzione in avanti per poter sfruttare l'azione della matrice $P^-1$ nel metodo di Gauss-Seidel. Al fine di ottimizzare al massimo i calcoli, se la matrice è sparsa viene sfruttato un indice che permette di iterare solo sugli elementi non nulli. Questo è un vantaggio enorme quando si ha a che fare con matrici molto sparse.
 	\end{item}
 	\begin{item}
-		\textbf{Modularità}: Il formato della matrice é stato reso indipendente dalla risoluzione, infatti nella libreria è possibile specificare, come parametro templato, la tipologia di matrice da risolvere. Gli algoritmi implementati sono generici, in modo tale da per poter gestire entrambi i formati in modo flessibile.
+		\textbf{Modularità}: Il formato della matrice é stato reso indipendente dalla risoluzione, infatti nella libreria è possibile specificare, come parametro templato, la tipologia di matrice da risolvere. Gli algoritmi implementati sono generici, in modo tale da per poter gestire entrambi i formati in modo flessibile. Questa caratteristica potrebbe tornare utile non tanto nel caso di metodi iterativi, ma, ad esempio, nell'eventualità in cui si volesse progettare un'estensione del software che contempli anche una parte più sostanziosa di decomposizioni o di metodi diretti.
+		
+		Oltre al formato della matrice, inoltre, si può anche specificare il livello di precisione degli algoritmi, tra cui, ad esempio, \texttt{float} o \texttt{double}.
 	\end{item}
 	\begin{item}
-		\textbf{Tolleranza}: Il valore di tolleranza viene passato alla libreria per impostare l'approssimazione da raggiungere prima di arrestare il metodo iterativo.
+		\textbf{Tolleranza}: Come da consegna, il valore di tolleranza viene passato alla libreria per impostare l'approssimazione da raggiungere prima di arrestare il metodo iterativo.
 	\end{item}
-
-    \begin{item}
-        \textbf{Eliminazione dei commenti}: I file .mtx potrebbero contenere dei commenti, in questa particolare estensione (.mtx) ogni riga di commento inizia con il carattere "\%". Abbiamo, dunque, fatto in modo che se presenti, essi vengano ignorati evitando errori di importazione.
-    \end{item}
+	\item \textbf{Varie ottimizzazioni}: Nell'implementazione dei metodi di risoluzione abbiamo cercato di ottimizzare il più possibile le operazioni in modo da minimizzare i tempi di esecuzione. Alcune di queste ottimizzazioni sono il calcolo del residuo non ripetuto per ogni iterazione, lo sfruttamento degli indici delle matrici sparse per effettuare la sostituzione in avanti analizzando solo gli elementi non nulli e il calcolo della norma del vettore dei termini noti una vola solo durante tutto il processo iterativo, usata poi per il calcolo della convergenza dell'algoritmo.
 
 \end{itemize}

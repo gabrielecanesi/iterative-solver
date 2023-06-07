@@ -71,17 +71,10 @@ Nelle Figure \ref{fig:toltimemat} e \ref{fig:toltimemet} sono rappresentati i gr
 Gauss Seidel è l'algoritmo che per le matrici relativamente dense, surclassa ogni altro metodo. Quando si passa a matrici estremamente sparse, come \path{vem1} e \path{vem2}, l'algoritmo che si comporta meglio sembra essere, invece, il gradiente coniugato.
 
 Dai grafici si evince immediatamente che, all'aumentare della tolleranza, il tempo di esecuzione di ogni algoritmo tende a calare. Questa tendenza è più che ragionevole dato che, al calare della tolleranza, il criterio di arresto diventa più permissivo e l'algoritmo tenderà ad arrestarsi prima.
-Tuttavia, è anche importante notare che, a differenza dell'errore relativo, il tempo di esecuzione dei vari metodi sembra poco sensibile alla tolleranza selezionata; inoltre, l'andamento tra le due misure sembra dipendere pesantemente dal tipo di matrice, per ogni metodo. Questo potrebbe suggerire che ogni metodi funzioni meglio su un determinato tipo di matrice, anche se non abbiamo abbastanza dati per estrarre delle conclusioni. Questa osservazione è basata soprattutto dai grafici rappresentanti i tempi di Gauss-Seidel e di Jacobi: \path{vem1} e \path{vem2} sono matrici estremamente sparse, con una percentuale di elementi non nulli inferiore all'1\%, mentre \path{spa1} e \path{spa2} hanno una percentuale di elementi diversi da zero che si aggira attorno al 18\%: entrambi i metodi riescono ad abbassare visibilmente i tempi per le matrici molto sparse, mentre, nel caso della più dense, questo rimane più o meno invariato. Questa caratteristica, ovviamente, potrebbe dipendere anche da altri fattori non analizzati, come la qualità dei numeri presenti all'interno delle matrici.
+Tuttavia, è anche importante notare che, a differenza dell'errore relativo, il tempo di esecuzione dei vari metodi sembra poco sensibile alla tolleranza selezionata; inoltre, l'andamento tra le due misure sembra dipendere pesantemente dal tipo di matrice, per ogni metodo. Questo potrebbe suggerire che ogni metodi funzioni meglio su un determinato tipo di matrice, anche se non abbiamo abbastanza dati per trarre delle conclusioni attendibili. Questa osservazione è basata soprattutto dai grafici rappresentanti i tempi di Gauss-Seidel e di Jacobi: \path{vem1} e \path{vem2} sono matrici estremamente sparse, con una percentuale di elementi non nulli inferiore all'1\%, mentre \path{spa1} e \path{spa2} hanno una percentuale di elementi diversi da zero che si aggira attorno al 18\%: entrambi i metodi riescono ad abbassare visibilmente i tempi per le matrici molto sparse, mentre, nel caso della più dense, questo rimane più o meno invariato. Questa caratteristica, ovviamente, potrebbe dipendere anche da altri fattori non analizzati, come la qualità dei numeri presenti all'interno delle matrici o la loro distribuzione in esse.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%Immagine tolerance-elapsedTime, spa1, difference between the 4 matrixes on the same method
-%Immagine tolerance-elapsedTime, spa2, difference between the 4 matrixes on the same method
-%Immagine tolerance-elapsedTime, vem1, difference between the 4 matrixes on the same method
-%Immagine tolerance-elapsedTime, vem2, difference between the 4 matrixes on the same method
+\paragraph{Considerazioni}
+Come anticipato prima, sembra che 
 
 
 
