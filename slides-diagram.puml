@@ -1,0 +1,145 @@
+@startuml
+/' Objects '/
+
+abstract class AbstractSolver <template<typename T, typename MatrixType>> {
+	+~AbstractSolver()
+	+{abstract} solve(MatrixType& A, &b) : SolverResults<T , MatrixType>*
+}
+
+
+class BackwardSubstitutionSolver <template<typename T, typename MatrixType>> {
+	-solveSpecific(&A, &b) : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+	+solveSpecific(&A, &b) : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+	+solve(MatrixType& A, &b) : SolverResults<T , MatrixType>*
+}
+
+
+
+
+class IterativeSolver <template<typename T, typename MatrixType>> {
+	+IterativeSolver(maxIter, *updateStrategy, tol, bool skipMatrixCheck,normType)
+	+IterativeSolver(const IterativeSolver<T, MatrixType>& other)
+	-normType : NormType
+	+solve(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : SolverResults<T , MatrixType>*
+        -T updateResidual(&currentResult, &A, &b) : T
+	-tol : T
+        -bNorm: T
+	+tolerance() : T
+	-updateStrategy : UpdateStrategy::Strategy<T, MatrixType>*
+	-reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) : bool
+	-skipMatrixCheck : bool
+	+methodName() : std::string
+	-iterations : unsigned int
+	-maxIter : unsigned int
+	+neededIterations() : unsigned int
+}
+
+
+enum NormType {
+	EUCLIDEAN
+	INFTY
+	MANHATTAN
+}
+
+
+
+namespace UpdateStrategy {
+	class ConjugateGradientUpdateStrategy <template<typename T, typename MatrixType>> {
+		+ConjugateGradientUpdateStrategy()
+		+ConjugateGradientUpdateStrategy(const& strategy)
+		+~ConjugateGradientUpdateStrategy()
+		-computeResidual() : Eigen::Matrix<T , Eigen::Dynamic , 1>
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-d : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		-residual : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-computeAlpha(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T
+		-computeBeta(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T
+		-name() : std::string
+		-init(MatrixType& A, &b) : void
+		-updateD(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : void
+	}
+
+	class GaussSeidelUpdateStrategy <template<typename T, typename MatrixType>> {
+		+GaussSeidelUpdateStrategy(T w)
+		+GaussSeidelUpdateStrategy()
+		+GaussSeidelUpdateStrategy(const& other)
+		+update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-P : MatrixType*
+		+clone() : Strategy<T , MatrixType>*
+		-w : T
+		+name() : std::string {query}
+		+init(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : void
+	}
+
+	class GradientUpdateStrategy <template<typename T, typename MatrixType>> {
+		+GradientUpdateStrategy()
+		+GradientUpdateStrategy(const GradientUpdateStrategy& other)
+		-computeResidual() : Eigen::Matrix<T , Eigen::Dynamic , 1>
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-computeAlpha(const Eigen::Matrix<T, Eigen::Dynamic, 1>& residual) : T
+		-name() : std::string {query}
+	}
+
+	class JacobiUpdateStrategy <template<typename T, typename MatrixType>> {
+		+JacobiUpdateStrategy()
+		+JacobiUpdateStrategy(T w)
+		+JacobiUpdateStrategy(const &other)
+		-PInverse : Eigen::DiagonalMatrix<T, Eigen::Dynamic>*
+		-update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		-clone() : Strategy<T , MatrixType>*
+		-w : T
+		-name() : std::string
+		+init(MatrixType& A, Eigen::Matrix<T, Eigen::Dynamic, 1>& b) : void
+	}
+
+	abstract class Strategy <template<typename T, typename MatrixType>> {
+		+Strategy()
+		+Strategy(const Strategy& other)
+		+~Strategy()
+		+{abstract} update() : Eigen::Matrix<T , Eigen::Dynamic , 1>*
+		#result : Eigen::Matrix<T, Eigen::Dynamic, 1>
+		#b : Eigen::Matrix<T, Eigen::Dynamic, 1>*
+		#A : MatrixType*
+                #residual: Eigen::Matrix<T, Eigen::Dynamic, 1>
+		+{abstract} clone() : Strategy<T , MatrixType>*
+		+{abstract} name() : std::string
+		+init(MatrixType& A, &b) : void
+                +getResidual(): Eigen::Matrix<T, Eigen::Dynamic, 1>&
+                +getResult(): std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>>
+	}
+}
+
+
+
+
+
+/' Inheritance relationships '/
+AbstractSolver <|- BackwardSubstitutionSolver
+
+IterativeSolver -|> AbstractSolver
+
+
+UpdateStrategy.Strategy <|- UpdateStrategy.ConjugateGradientUpdateStrategy
+
+
+UpdateStrategy.Strategy <|- UpdateStrategy.GaussSeidelUpdateStrategy
+
+
+UpdateStrategy.Strategy <|-- UpdateStrategy.GradientUpdateStrategy
+
+
+UpdateStrategy.Strategy <|-- UpdateStrategy.JacobiUpdateStrategy
+
+
+
+
+.IterativeSolver *- NormType
+
+.IterativeSolver *-- UpdateStrategy.Strategy
+
+
+
+/' Nested objects '/
+@enduml
