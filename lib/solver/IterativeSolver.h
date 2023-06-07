@@ -23,22 +23,36 @@ private:
     bool skipMatrixCheck = false;
     NormType normType;
     bool skipCondition;
+    T bNorm;
 
-    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
-        double abNorm;
-        double bNorm;
+    void computeBNorm(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b) {
         switch (normType) {
             case NormType::EUCLIDEAN:
-                abNorm = (updateStrategy->getResidual()).norm();
                 bNorm = b.norm();
                 break;
             case NormType::MANHATTAN:
-                abNorm = (updateStrategy->getResidual()).template lpNorm<1>();
                 bNorm = b.template lpNorm<1>();
                 break;
             case NormType::INFTY:
-                abNorm = (updateStrategy->getResidual()).template lpNorm<Eigen::Infinity>();
                 bNorm = b.template lpNorm<Eigen::Infinity>();
+                break;
+            default:
+                break;
+        }
+    }
+
+    bool reachedTolerance(const Eigen::Matrix<T, Eigen::Dynamic, 1> &b, T tol) const {
+        double abNorm;
+        
+        switch (normType) {
+            case NormType::EUCLIDEAN:
+                abNorm = (updateStrategy->getResidual()).norm();
+                break;
+            case NormType::MANHATTAN:
+                abNorm = (updateStrategy->getResidual()).template lpNorm<1>();
+                break;
+            case NormType::INFTY:
+                abNorm = (updateStrategy->getResidual()).template lpNorm<Eigen::Infinity>();
                 break;
             default:
                 break;
@@ -87,7 +101,7 @@ public:
             cond = MatrixUtil::conditionNumber<T, MatrixType>(A, 1e-6, 1000);
         }
 
-        
+        computeBNorm(b);
 
         if (b.isZero(ZERO_THRESHOLD)) {
             std::shared_ptr<Eigen::Matrix<T, Eigen::Dynamic, 1>> solution = std::make_shared<Eigen::Matrix<T, Eigen::Dynamic, 1>>(b.rows(), 1);
