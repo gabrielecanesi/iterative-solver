@@ -34,8 +34,28 @@
 \usepackage{caption}
 \usepackage{pdfpages}
 \usepackage{placeins}
+\usepackage{listings}
 \usepgfplotslibrary{groupplots}
 \pgfplotsset{compat=1.18}
+
+\lstset{
+	language=C++,
+	tabsize=4,
+	keepspaces,
+	extendedchars=true,
+	rulecolor=\color{black},
+	basicstyle=\footnotesize,
+	aboveskip=5pt,
+	upquote=true,
+	columns=fixed,
+	showstringspaces=false,
+	extendedchars=true,
+	breaklines=false,
+	frame=single,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+}
 
 
 \addbibresource{bibliography.bib}
@@ -68,11 +88,13 @@
 	numbersep=5pt,                  
 	showspaces=false,                
 	showstringspaces=false,
-	showtabs=true,                  
+	showtabs=false,                  
 	tabsize=1
 }
 
 \lstset{style=mystyle}
+
+
 
 \setlength{\headheight}{14pt}
 

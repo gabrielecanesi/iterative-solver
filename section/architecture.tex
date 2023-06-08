@@ -11,7 +11,24 @@ Il nostro progetto contiene tre progetti distinti:
 La libreria viene compilata producendo in output un file binario non eseguibile; per poterla utilizzare, gli altri due sottoprogetti (indipendenti tra loro) vengono linkati con esso per poter produrre un file eseguibile. Questa struttura permette di scindere in modo netto il codice dei nostri applicativi "client" da quello della libreria, incentivando al riutilizzo in contesti diversi.
 
 \subsection{Libreria effettiva}
-Come citato in precedenza, questo è il sottoprogetto principale tra quelli presenti. In Figura \ref{fig:libdiagram} si può osservare l'architettura delle classi di questo progetto, con l'omissione di alcuni tipi nelle firme dei metodi e il caricamento in formato vettoriale per questioni di leggibilità. Il componente più importante è la classe \texttt{IterativeSolver}. Questa classe estende (e implementa, essendo concreta) la classe astratta \texttt{Solver}. All'interno di queste due classi  è presente un metodo \texttt{solve} che prende in input la matrice dei coefficienti, il vettore dei termini noti e restituisce il vettore soluzione calcolato. Il punto fondamentale della risoluzione di un sistema in modo iterativo è il ciclo che esegue gli update a partire dalla soluzione corrente: essendo uguale per qualsiasi metodo, abbiamo fatto in modo che il solver iterativo avesse come attributo di istanza un puntatore alla regola astratta di update, che viene estesa e implementata dalle regole specifiche, istanzate da chi usa la libreria, sulla base delle proprie esigenze. Questa struttura è un'applicazione del design pattern \textit{Strategy} \cite{Strategy}. Esiste una classe concreta per ognuno dei quattro metodi richiesti.
+Come citato in precedenza, questo è il sottoprogetto principale tra quelli presenti. In Figura \ref{fig:libdiagram} si può osservare l'architettura delle classi di questo progetto, con l'omissione di alcuni tipi nelle firme dei metodi e il caricamento in formato vettoriale per questioni di leggibilità. Il componente più importante è la classe \texttt{IterativeSolver}. Questa classe estende (e implementa, essendo concreta) la classe astratta \texttt{Solver}. All'interno di queste due classi  è presente un metodo \texttt{solve} che prende in input la matrice dei coefficienti, il vettore dei termini noti e restituisce il vettore soluzione calcolato. Il punto fondamentale della risoluzione di un sistema in modo iterativo è il ciclo che esegue gli update a partire dalla soluzione corrente: essendo uguale per qualsiasi metodo, abbiamo fatto in modo che il solver iterativo avesse come attributo di istanza un puntatore alla regola astratta di update,  che viene estesa e implementata dalle regole specifiche, istanziate da chi usa la libreria, sulla base delle proprie esigenze. 
+
+\begin{lstlisting}[caption={Loop del solver}, label={lst:update}, float]
+	updateStrategy->init(A, b);
+	
+	do {
+		currentResult = updateStrategy->update();
+		updateResidual(*currentResult, A, b);
+		++iter;
+	} while (iter < maxIter && !reachedTolerance(b, tol));
+\end{lstlisting}
+
+Il punto fondamentale della risoluzione di un sistema in modo iterativo è il ciclo che esegue gli update, osservabile nel Listato \ref{lst:update}. Nel suo corpo è presente un riferimento al metodo di update astratto, chiamato \textit{updateStrategy}, sul quale viene prima invocato un primo metodo, init, che esegue alcune operazioni preliminari legate al metodo, come ad esempio la matrice $P^-1$ per Jacobi. Successivamente, nella generazione delle varie soluzioni, viene chiamato il metodo di update, sulla strategia selezionata. Infine viene calcolato il residuo, in modo tale che venga computato una sola volta e condiviso tra il metodo di arresto e la strategia concreta.
+
+Essendo \textit{updateStrategy} astratto, un utente che utilizza la libreria può specificare il metodo che preferisce tra quelli implementati, oppure può anche crearsi una propria implementazione da passare poi al solver. Questo lascia anche aperta la possibilità di implementare facilmente altri metodi iterativi. Questa struttura è un'applicazione del design pattern \textit{Strategy} \cite{Strategy}. Esiste una classe concreta per ognuno dei quattro metodi richiesti.
+
+
+
 
 Questa libreria, inoltre, permette di creare dei solver personalizzando il tipo di matrice dei coefficienti (sparsa o densa) e il tipo di precisione (\path{float} o \path{double}) utilizzando in modo esteso i template di C++.
 
@@ -27,7 +44,7 @@ Questo sottoprogetto è molto piccolo, di fatto contiene una cli che accetta due
 
 \begin{enumerate}
 	\item \path{solve}, che permette di specificare il percorso relativo ad una matrice da risolvere, applicandone i test creati.
-	\item \path{test}, attraverso il quale è possibile eseguire i test su tutte le varie matrici di benchmark È importante notare che, nel caso di test, le matrici devono trovarsi nella cartella \path{../Matrices/}.
+	\item \path{test}, attraverso il quale è possibile eseguire i test su tutte le varie matrici di benchmark. È importante notare che, nel caso di test, le matrici devono trovarsi nella cartella \path{../Matrices/}.
 \end{enumerate}
 
 È importante notare che, a entrambi i comandi, si possono passare dei parametri utili a modificare il comportamento del solver. Nello specifico, sono presenti i seguenti:
@@ -48,8 +65,8 @@ Abbiamo creato anche una piccola applicazione con interfaccia grafica usando il 
 	\item Selezionare il file contenente la matrice de coefficienti
 	\item Regolare i parametri $\omega$ per i metodi di Jacobi e Gauss-Seidel;
 	\item Selezionare il tipo di norma da calcolare in fase di controllo della convergenza. Le scelte possibili sono euclidea, manhattan e infinito;
-	\item Decidere di saltare il controllo che stabilisce se la matrice è simmetrica e definita positiva\footnote{Questa opzione può tornare utlie per eventuali benchmark. Infatti, questo controllo richiede diverso tempo e rischia di nascondere le differenze tra i vari metodi in termini di tempo, sopratttutto per matrici relativamente piccole};
-	\item Visualizzare i risultati dei metodi sotto forma di tabella e di grafici che mostrano l'errore relativo e i tempi in funzione della tolleranza, ragruppati per metodo (Figura \ref{fig:ui:output}).
+	\item Decidere di saltare il controllo che stabilisce se la matrice è simmetrica e definita positiva\footnote{Questa opzione può tornare utile per eventuali benchmark. Infatti, questo controllo richiede diverso tempo e rischia di nascondere le differenze tra i vari metodi in termini di tempo, soprattutto per matrici relativamente piccole};
+	\item Visualizzare i risultati dei metodi sotto forma di tabella e di grafici che mostrano l'errore relativo e i tempi in funzione della tolleranza, raggruppati per metodo (Figura \ref{fig:ui:output}).
 	\item Esportare i risultati in formato CSV.
 \end{itemize}
 
